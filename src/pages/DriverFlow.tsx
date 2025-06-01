@@ -50,7 +50,7 @@ const DriverFlow = () => {
 
   const handlePrevious = () => {
     if (currentStep > 1) {
-      setCurrentStep((current - 1) as DriverStep);
+      setCurrentStep((currentStep - 1) as DriverStep);
     }
   };
 
