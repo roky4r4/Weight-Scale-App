@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useLanguage } from '../hooks/useLanguage';
 import { useOrders, mockProducts } from '../contexts/OrderContext';
@@ -7,18 +8,104 @@ import { Input } from '../components/ui/input';
 import { Badge } from '../components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import Header from '../components/Header';
+import ProductFormDialog from '../components/ProductFormDialog';
+import CustomerFormDialog from '../components/CustomerFormDialog';
+import OperatorFormDialog from '../components/OperatorFormDialog';
 import { Product } from '../types';
+
+interface Customer {
+  id: string;
+  name: string;
+  numberPlate: string;
+  contact: string;
+}
+
+interface Operator {
+  id: string;
+  name: string;
+  shift: string;
+  status: 'active' | 'off-duty';
+}
 
 const AdminDashboard = () => {
   const { t } = useLanguage();
   const { orders } = useOrders();
   const [products, setProducts] = useState<Product[]>(Object.values(mockProducts));
-
-  const customers = [
+  const [customers, setCustomers] = useState<Customer[]>([
     { id: '1', name: 'Acme Corp', numberPlate: 'AB-123-CD', contact: 'contact@acme.com' },
     { id: '2', name: 'BuildCo Ltd', numberPlate: 'DE-456-FG', contact: 'info@buildco.com' },
     { id: '3', name: 'Construction Inc', numberPlate: 'HI-789-JK', contact: 'hello@construction.com' }
-  ];
+  ]);
+  const [operators, setOperators] = useState<Operator[]>([
+    { id: '1', name: 'Hans Mueller', shift: 'Morning (06:00-14:00)', status: 'active' },
+    { id: '2', name: 'Klaus Weber', shift: 'Afternoon (14:00-22:00)', status: 'active' },
+    { id: '3', name: 'Fritz Schmidt', shift: 'Night (22:00-06:00)', status: 'off-duty' }
+  ]);
+
+  // Dialog states
+  const [productDialog, setProductDialog] = useState<{ isOpen: boolean; product?: Product }>({ isOpen: false });
+  const [customerDialog, setCustomerDialog] = useState<{ isOpen: boolean; customer?: Customer }>({ isOpen: false });
+  const [operatorDialog, setOperatorDialog] = useState<{ isOpen: boolean; operator?: Operator }>({ isOpen: false });
+
+  // Search and filter states
+  const [orderSearch, setOrderSearch] = useState('');
+
+  // Product handlers
+  const handleProductSave = (productData: Omit<Product, 'id'> & { id?: string }) => {
+    if (productData.id) {
+      // Edit existing product
+      setProducts(prev => prev.map(p => p.id === productData.id ? { ...productData, id: productData.id } as Product : p));
+    } else {
+      // Add new product
+      const newProduct: Product = {
+        ...productData,
+        id: Date.now().toString()
+      };
+      setProducts(prev => [...prev, newProduct]);
+    }
+  };
+
+  const handleProductDelete = (id: string) => {
+    setProducts(prev => prev.filter(p => p.id !== id));
+  };
+
+  // Customer handlers
+  const handleCustomerSave = (customerData: Omit<Customer, 'id'> & { id?: string }) => {
+    if (customerData.id) {
+      // Edit existing customer
+      setCustomers(prev => prev.map(c => c.id === customerData.id ? { ...customerData, id: customerData.id } as Customer : c));
+    } else {
+      // Add new customer
+      const newCustomer: Customer = {
+        ...customerData,
+        id: Date.now().toString()
+      };
+      setCustomers(prev => [...prev, newCustomer]);
+    }
+  };
+
+  const handleCustomerDelete = (id: string) => {
+    setCustomers(prev => prev.filter(c => c.id !== id));
+  };
+
+  // Operator handlers
+  const handleOperatorSave = (operatorData: Omit<Operator, 'id'> & { id?: string }) => {
+    if (operatorData.id) {
+      // Edit existing operator
+      setOperators(prev => prev.map(o => o.id === operatorData.id ? { ...operatorData, id: operatorData.id } as Operator : o));
+    } else {
+      // Add new operator
+      const newOperator: Operator = {
+        ...operatorData,
+        id: Date.now().toString()
+      };
+      setOperators(prev => [...prev, newOperator]);
+    }
+  };
+
+  const handleOperatorDelete = (id: string) => {
+    setOperators(prev => prev.filter(o => o.id !== id));
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -38,6 +125,19 @@ const AdminDashboard = () => {
         return null;
     }
   };
+
+  // Filter orders based on search
+  const filteredOrders = orders.filter(order => {
+    const searchLower = orderSearch.toLowerCase();
+    const product = mockProducts[order.products[0]?.productId];
+    const customer = order.customerName || customers.find(c => c.numberPlate === order.truckId)?.name;
+    
+    return !orderSearch || 
+           order.truckId.toLowerCase().includes(searchLower) ||
+           customer?.toLowerCase().includes(searchLower) ||
+           product?.name.toLowerCase().includes(searchLower) ||
+           order.status.toLowerCase().includes(searchLower);
+  });
 
   return (
     <div className="min-h-screen bg-industrial-900">
@@ -66,7 +166,10 @@ const AdminDashboard = () => {
             <TabsContent value="products" className="space-y-6">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold text-white">Product Management</h2>
-                <Button className="btn-large bg-primary hover:bg-blue-600">
+                <Button 
+                  className="btn-large bg-primary hover:bg-blue-600"
+                  onClick={() => setProductDialog({ isOpen: true })}
+                >
                   {t('common.add')} Product
                 </Button>
               </div>
@@ -89,10 +192,18 @@ const AdminDashboard = () => {
                         €{product.price}/{product.unit}
                       </div>
                       <div className="flex space-x-2">
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => setProductDialog({ isOpen: true, product })}
+                        >
                           {t('common.edit')}
                         </Button>
-                        <Button variant="destructive" size="sm">
+                        <Button 
+                          variant="destructive" 
+                          size="sm"
+                          onClick={() => handleProductDelete(product.id)}
+                        >
                           {t('common.delete')}
                         </Button>
                       </div>
@@ -113,7 +224,10 @@ const AdminDashboard = () => {
             <TabsContent value="customers" className="space-y-6">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold text-white">Customer Management</h2>
-                <Button className="btn-large bg-primary hover:bg-blue-600">
+                <Button 
+                  className="btn-large bg-primary hover:bg-blue-600"
+                  onClick={() => setCustomerDialog({ isOpen: true })}
+                >
                   {t('common.add')} Customer
                 </Button>
               </div>
@@ -133,10 +247,18 @@ const AdminDashboard = () => {
                         <Badge className="bg-success text-white">Registered</Badge>
                       </div>
                       <div className="flex space-x-2">
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => setCustomerDialog({ isOpen: true, customer })}
+                        >
                           {t('common.edit')}
                         </Button>
-                        <Button variant="destructive" size="sm">
+                        <Button 
+                          variant="destructive" 
+                          size="sm"
+                          onClick={() => handleCustomerDelete(customer.id)}
+                        >
                           {t('common.delete')}
                         </Button>
                       </div>
@@ -154,14 +276,16 @@ const AdminDashboard = () => {
                   <Input 
                     placeholder="Search orders..."
                     className="bg-industrial-700 border-industrial-500"
+                    value={orderSearch}
+                    onChange={(e) => setOrderSearch(e.target.value)}
                   />
                   <Button variant="outline">Filter</Button>
                 </div>
               </div>
               
               <div className="grid gap-6">
-                {orders.map((order) => {
-                  const product = mockProducts[order.products[0].productId];
+                {filteredOrders.map((order) => {
+                  const product = mockProducts[order.products[0]?.productId];
                   const customer = order.customerName || customers.find(c => c.numberPlate === order.truckId)?.name;
                   
                   return (
@@ -175,7 +299,7 @@ const AdminDashboard = () => {
                           {product?.name}
                         </div>
                         <div className="text-primary font-semibold">
-                          {order.products[0].quantity} tons
+                          {order.products[0]?.quantity} tons
                         </div>
                         <div>
                           {getStatusBadge(order.status)}
@@ -207,17 +331,16 @@ const AdminDashboard = () => {
             <TabsContent value="operators" className="space-y-6">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold text-white">Excavator Operators</h2>
-                <Button className="btn-large bg-primary hover:bg-blue-600">
+                <Button 
+                  className="btn-large bg-primary hover:bg-blue-600"
+                  onClick={() => setOperatorDialog({ isOpen: true })}
+                >
                   {t('common.add')} Operator
                 </Button>
               </div>
               
               <div className="grid gap-6">
-                {[
-                  { id: '1', name: 'Hans Mueller', shift: 'Morning (06:00-14:00)', status: 'active' },
-                  { id: '2', name: 'Klaus Weber', shift: 'Afternoon (14:00-22:00)', status: 'active' },
-                  { id: '3', name: 'Fritz Schmidt', shift: 'Night (22:00-06:00)', status: 'off-duty' }
-                ].map((operator) => (
+                {operators.map((operator) => (
                   <Card key={operator.id} className="p-6 bg-industrial-800 border-industrial-600">
                     <div className="grid md:grid-cols-4 gap-4 items-center">
                       <div>
@@ -232,10 +355,18 @@ const AdminDashboard = () => {
                         </Badge>
                       </div>
                       <div className="flex space-x-2">
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => setOperatorDialog({ isOpen: true, operator })}
+                        >
                           {t('common.edit')}
                         </Button>
-                        <Button variant="destructive" size="sm">
+                        <Button 
+                          variant="destructive" 
+                          size="sm"
+                          onClick={() => handleOperatorDelete(operator.id)}
+                        >
                           {t('common.delete')}
                         </Button>
                       </div>
@@ -247,6 +378,31 @@ const AdminDashboard = () => {
           </Tabs>
         </div>
       </div>
+
+      {/* Form Dialogs */}
+      <ProductFormDialog
+        product={productDialog.product}
+        isOpen={productDialog.isOpen}
+        onClose={() => setProductDialog({ isOpen: false })}
+        onSave={handleProductSave}
+        onDelete={handleProductDelete}
+      />
+
+      <CustomerFormDialog
+        customer={customerDialog.customer}
+        isOpen={customerDialog.isOpen}
+        onClose={() => setCustomerDialog({ isOpen: false })}
+        onSave={handleCustomerSave}
+        onDelete={handleCustomerDelete}
+      />
+
+      <OperatorFormDialog
+        operator={operatorDialog.operator}
+        isOpen={operatorDialog.isOpen}
+        onClose={() => setOperatorDialog({ isOpen: false })}
+        onSave={handleOperatorSave}
+        onDelete={handleOperatorDelete}
+      />
     </div>
   );
 };
