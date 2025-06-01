@@ -1,43 +1,15 @@
 
-import { useState } from 'react';
 import { useLanguage } from '../hooks/useLanguage';
+import { useOrders, mockProducts } from '../contexts/OrderContext';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import Header from './Header';
-import { Order } from '../types';
+import NoteDialog from './NoteDialog';
 
 const ExcavatorOperatorScreen = () => {
   const { t } = useLanguage();
-  const [orders, setOrders] = useState<Order[]>([
-    {
-      id: '1',
-      truckId: 'AB-123-CD',
-      products: [{ productId: '1', quantity: 20 }],
-      status: 'pending',
-      type: 'loading'
-    },
-    {
-      id: '2',
-      truckId: 'DE-456-FG',
-      products: [{ productId: '2', quantity: 15 }],
-      status: 'in-progress',
-      type: 'unloading'
-    },
-    {
-      id: '3',
-      truckId: 'HI-789-JK',
-      products: [{ productId: '3', quantity: 25 }],
-      status: 'pending',
-      type: 'loading'
-    }
-  ]);
-
-  const products = {
-    '1': { name: 'Premium Gravel', stockyardArea: 'Area A' },
-    '2': { name: 'Sand', stockyardArea: 'Area B' },
-    '3': { name: 'Crushed Stone', stockyardArea: 'Area C' }
-  };
+  const { orders, updateOrderStatus, addNoteToOrder } = useOrders();
 
   const customers = {
     'AB-123-CD': 'Acme Corp',
@@ -59,19 +31,15 @@ const ExcavatorOperatorScreen = () => {
   };
 
   const handleStartTask = (orderId: string) => {
-    setOrders(orders.map(order => 
-      order.id === orderId 
-        ? { ...order, status: 'in-progress' as const }
-        : order
-    ));
+    updateOrderStatus(orderId, 'in-progress');
   };
 
   const handleCompleteTask = (orderId: string) => {
-    setOrders(orders.map(order => 
-      order.id === orderId 
-        ? { ...order, status: 'completed' as const }
-        : order
-    ));
+    updateOrderStatus(orderId, 'completed');
+  };
+
+  const handleAddNote = (orderId: string, note: string) => {
+    addNoteToOrder(orderId, note);
   };
 
   return (
@@ -82,8 +50,8 @@ const ExcavatorOperatorScreen = () => {
         <div className="max-w-6xl mx-auto space-y-6">
           
           {orders.map((order) => {
-            const product = products[order.products[0].productId];
-            const customer = customers[order.truckId];
+            const product = mockProducts[order.products[0].productId];
+            const customer = order.customerName || customers[order.truckId];
             
             return (
               <Card key={order.id} className="p-8 bg-industrial-800 border-industrial-600">
@@ -98,6 +66,11 @@ const ExcavatorOperatorScreen = () => {
                       {customer}
                     </div>
                     {getStatusBadge(order.status)}
+                    {order.notes && order.notes.length > 0 && (
+                      <div className="text-sm text-industrial-400">
+                        {order.notes.length} note(s)
+                      </div>
+                    )}
                   </div>
 
                   {/* Product & Quantity */}
@@ -146,15 +119,34 @@ const ExcavatorOperatorScreen = () => {
                       </Button>
                     )}
                     
-                    <Button
-                      variant="outline"
-                      className="w-full btn-large"
-                      size="lg"
-                    >
-                      {t('operator.add.note')}
-                    </Button>
+                    <NoteDialog onAddNote={(note) => handleAddNote(order.id, note)}>
+                      <Button
+                        variant="outline"
+                        className="w-full btn-large"
+                        size="lg"
+                      >
+                        {t('operator.add.note')}
+                      </Button>
+                    </NoteDialog>
                   </div>
                 </div>
+                
+                {/* Notes Display */}
+                {order.notes && order.notes.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-industrial-600">
+                    <div className="text-sm text-industrial-300 mb-2">Notes:</div>
+                    <div className="space-y-2">
+                      {order.notes.map((note, index) => (
+                        <div key={index} className="text-sm bg-industrial-700 p-2 rounded">
+                          <div className="text-white">{note.text}</div>
+                          <div className="text-industrial-400 text-xs mt-1">
+                            {new Date(note.timestamp).toLocaleString()}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </Card>
             );
           })}

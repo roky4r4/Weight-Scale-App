@@ -1,6 +1,6 @@
-
 import { useState } from 'react';
 import { useLanguage } from '../hooks/useLanguage';
+import { useOrders, mockProducts } from '../contexts/OrderContext';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
@@ -11,46 +11,13 @@ import { Product } from '../types';
 
 const AdminDashboard = () => {
   const { t } = useLanguage();
-  const [products, setProducts] = useState<Product[]>([
-    {
-      id: '1',
-      name: 'Premium Gravel',
-      description: 'High-quality construction gravel',
-      stockyardArea: 'Area A',
-      availability: 'available',
-      unit: 'tons',
-      price: 45
-    },
-    {
-      id: '2',
-      name: 'Sand',
-      description: 'Fine construction sand',
-      stockyardArea: 'Area B',
-      availability: 'available',
-      unit: 'tons',
-      price: 35
-    },
-    {
-      id: '3',
-      name: 'Crushed Stone',
-      description: 'Various sizes available',
-      stockyardArea: 'Area C',
-      availability: 'low',
-      unit: 'tons',
-      price: 50
-    }
-  ]);
+  const { orders } = useOrders();
+  const [products, setProducts] = useState<Product[]>(Object.values(mockProducts));
 
   const customers = [
     { id: '1', name: 'Acme Corp', numberPlate: 'AB-123-CD', contact: 'contact@acme.com' },
     { id: '2', name: 'BuildCo Ltd', numberPlate: 'DE-456-FG', contact: 'info@buildco.com' },
     { id: '3', name: 'Construction Inc', numberPlate: 'HI-789-JK', contact: 'hello@construction.com' }
-  ];
-
-  const orders = [
-    { id: '1', truck: 'AB-123-CD', customer: 'Acme Corp', product: 'Premium Gravel', quantity: 20, status: 'completed', date: '2024-06-01' },
-    { id: '2', truck: 'DE-456-FG', customer: 'BuildCo Ltd', product: 'Sand', quantity: 15, status: 'in-progress', date: '2024-06-01' },
-    { id: '3', truck: 'HI-789-JK', customer: 'Construction Inc', product: 'Crushed Stone', quantity: 25, status: 'pending', date: '2024-06-01' }
   ];
 
   const getStatusBadge = (status: string) => {
@@ -193,33 +160,46 @@ const AdminDashboard = () => {
               </div>
               
               <div className="grid gap-6">
-                {orders.map((order) => (
-                  <Card key={order.id} className="p-6 bg-industrial-800 border-industrial-600">
-                    <div className="grid md:grid-cols-6 gap-4 items-center">
-                      <div>
-                        <div className="text-lg font-semibold text-white">{order.customer}</div>
-                        <div className="text-industrial-300 text-sm font-mono">{order.truck}</div>
+                {orders.map((order) => {
+                  const product = mockProducts[order.products[0].productId];
+                  const customer = order.customerName || customers.find(c => c.numberPlate === order.truckId)?.name;
+                  
+                  return (
+                    <Card key={order.id} className="p-6 bg-industrial-800 border-industrial-600">
+                      <div className="grid md:grid-cols-6 gap-4 items-center">
+                        <div>
+                          <div className="text-lg font-semibold text-white">{customer}</div>
+                          <div className="text-industrial-300 text-sm font-mono">{order.truckId}</div>
+                        </div>
+                        <div className="text-white">
+                          {product?.name}
+                        </div>
+                        <div className="text-primary font-semibold">
+                          {order.products[0].quantity} tons
+                        </div>
+                        <div>
+                          {getStatusBadge(order.status)}
+                        </div>
+                        <div className="text-industrial-300">
+                          {new Date().toLocaleDateString()}
+                        </div>
+                        <div>
+                          <Button variant="outline" size="sm">
+                            View Details
+                          </Button>
+                        </div>
                       </div>
-                      <div className="text-white">
-                        {order.product}
-                      </div>
-                      <div className="text-primary font-semibold">
-                        {order.quantity} tons
-                      </div>
-                      <div>
-                        {getStatusBadge(order.status)}
-                      </div>
-                      <div className="text-industrial-300">
-                        {order.date}
-                      </div>
-                      <div>
-                        <Button variant="outline" size="sm">
-                          View Details
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
+                      {order.notes && order.notes.length > 0 && (
+                        <div className="mt-4 pt-4 border-t border-industrial-600">
+                          <div className="text-sm text-industrial-300 mb-2">Notes: {order.notes.length}</div>
+                          <div className="text-sm text-industrial-400">
+                            Latest: {order.notes[order.notes.length - 1].text}
+                          </div>
+                        </div>
+                      )}
+                    </Card>
+                  );
+                })}
               </div>
             </TabsContent>
 

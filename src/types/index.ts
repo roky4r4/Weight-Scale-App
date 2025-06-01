@@ -25,6 +25,11 @@ export interface Product {
   price?: number;
 }
 
+export interface OrderNote {
+  text: string;
+  timestamp: string;
+}
+
 export interface Order {
   id: string;
   truckId: string;
@@ -38,6 +43,8 @@ export interface Order {
   tareWeight?: number;
   netWeight?: number;
   type: 'loading' | 'unloading' | 'both';
+  notes?: OrderNote[];
+  customerName?: string;
 }
 
 export interface Language {
