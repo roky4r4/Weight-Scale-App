@@ -14,14 +14,16 @@ const DriverScreen1 = ({ onNext }: DriverScreen1Props) => {
   const { t } = useLanguage();
   const [detectedWeight] = useState(1650);
   const [detectedPlate, setDetectedPlate] = useState('AB-123-CD');
-  const [customerName] = useState('Acme Corp');
+  const [customerName, setCustomerName] = useState('');
 
   const handleConfirm = () => {
-    onNext({
-      weight: detectedWeight,
-      numberPlate: detectedPlate,
-      customerName
-    });
+    if (customerName.trim()) {
+      onNext({
+        weight: detectedWeight,
+        numberPlate: detectedPlate,
+        customerName: customerName.trim()
+      });
+    }
   };
 
   return (
@@ -67,11 +69,20 @@ const DriverScreen1 = ({ onNext }: DriverScreen1Props) => {
             </div>
           </Card>
 
-          {/* Welcome Message */}
+          {/* Customer Name Input */}
           <Card className="p-8 bg-industrial-800 border-industrial-600">
             <div className="text-center">
-              <div className="text-2xl text-success font-semibold">
-                {t('screen1.welcome')}, {customerName}
+              <div className="text-industrial-300 text-xl mb-4">
+                Customer/Company Name
+              </div>
+              <Input
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                className="input-large text-center text-2xl bg-industrial-700 border-industrial-500"
+                placeholder="Enter customer name"
+              />
+              <div className="text-sm text-industrial-400 mt-2">
+                Enter your company name or customer name
               </div>
             </div>
           </Card>
@@ -80,6 +91,7 @@ const DriverScreen1 = ({ onNext }: DriverScreen1Props) => {
           <div className="flex justify-center pt-8">
             <Button
               onClick={handleConfirm}
+              disabled={!customerName.trim()}
               className="btn-large bg-primary hover:bg-blue-600 text-white text-2xl px-16 py-8"
               size="lg"
             >

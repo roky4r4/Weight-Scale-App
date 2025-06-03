@@ -10,9 +10,10 @@ import { Product } from '../types';
 interface DriverScreen3Props {
   onNext: (product: Product) => void;
   onPrevious: () => void;
+  isRegistered: boolean;
 }
 
-const DriverScreen3 = ({ onNext, onPrevious }: DriverScreen3Props) => {
+const DriverScreen3 = ({ onNext, onPrevious, isRegistered }: DriverScreen3Props) => {
   const { t } = useLanguage();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   
@@ -23,7 +24,8 @@ const DriverScreen3 = ({ onNext, onPrevious }: DriverScreen3Props) => {
       description: 'High-quality construction gravel',
       stockyardArea: 'Stockyard Area A',
       availability: 'available',
-      unit: 'tons'
+      unit: 'tons',
+      price: 45
     },
     {
       id: '2',
@@ -31,7 +33,8 @@ const DriverScreen3 = ({ onNext, onPrevious }: DriverScreen3Props) => {
       description: 'Fine construction sand',
       stockyardArea: 'Stockyard Area B',
       availability: 'available',
-      unit: 'tons'
+      unit: 'tons',
+      price: 35
     },
     {
       id: '3',
@@ -39,7 +42,8 @@ const DriverScreen3 = ({ onNext, onPrevious }: DriverScreen3Props) => {
       description: 'Various sizes available',
       stockyardArea: 'Stockyard Area C',
       availability: 'low',
-      unit: 'tons'
+      unit: 'tons',
+      price: 50
     },
     {
       id: '4',
@@ -47,7 +51,8 @@ const DriverScreen3 = ({ onNext, onPrevious }: DriverScreen3Props) => {
       description: 'Ready-mix concrete',
       stockyardArea: 'Stockyard Area D',
       availability: 'unavailable',
-      unit: 'tons'
+      unit: 'tons',
+      price: 55
     }
   ];
 
@@ -107,6 +112,11 @@ const DriverScreen3 = ({ onNext, onPrevious }: DriverScreen3Props) => {
                       <div className="text-industrial-300 mb-2">
                         {product.description}
                       </div>
+                      {!isRegistered && product.price && (
+                        <div className="text-primary font-bold text-lg">
+                          €{product.price}/ton
+                        </div>
+                      )}
                     </div>
                     {getAvailabilityBadge(product.availability)}
                   </div>

@@ -119,6 +119,7 @@ const DriverFlow = () => {
         <DriverScreen3 
           onNext={handleStep3Next} 
           onPrevious={handlePrevious}
+          isRegistered={driverData.isRegistered || false}
         />
       );
     case 4:
