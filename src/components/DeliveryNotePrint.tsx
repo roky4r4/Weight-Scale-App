@@ -1,8 +1,7 @@
-
 import { useLanguage } from '../hooks/useLanguage';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
-import { Printer, Download } from 'lucide-react';
+import { Printer } from 'lucide-react';
 import Header from './Header';
 import { Product } from '../types';
 
@@ -50,15 +49,6 @@ const DeliveryNotePrint = ({
             >
               <Printer size={20} className="mr-2" />
               Print Delivery Note
-            </Button>
-            <Button
-              onClick={handlePrint}
-              variant="outline"
-              className="btn-large"
-              size="lg"
-            >
-              <Download size={20} className="mr-2" />
-              Download PDF
             </Button>
           </div>
 
@@ -171,7 +161,7 @@ const DeliveryNotePrint = ({
               className="btn-large bg-success hover:bg-success/90 text-white text-2xl px-16 py-8"
               size="lg"
             >
-              Complete Delivery
+              Confirm & Print Delivery Note
             </Button>
           </div>
         </div>
