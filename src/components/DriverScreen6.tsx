@@ -46,7 +46,7 @@ const DriverScreen6 = ({ product, quantity, grossWeight, onNext }: DriverScreen6
                 {loadedWeight} kg
               </div>
             </div>
-          </div>
+          </Card>
 
           {/* Weight Breakdown */}
           <Card className="p-8 bg-industrial-800 border-industrial-600">
