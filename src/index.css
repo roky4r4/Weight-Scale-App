@@ -1,48 +1,34 @@
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 @layer base {
   :root {
-    --background: 26 26 29;
-    --foreground: 243 244 246;
-
-    --card: 42 42 66;
-    --card-foreground: 243 244 246;
-
-    --popover: 42 42 66;
-    --popover-foreground: 243 244 246;
-
-    --primary: 37 99 235;
-    --primary-foreground: 255 255 255;
-
-    --secondary: 58 58 66;
-    --secondary-foreground: 243 244 246;
-
-    --muted: 58 58 66;
-    --muted-foreground: 156 163 175;
-
-    --accent: 74 74 85;
-    --accent-foreground: 243 244 246;
-
-    --destructive: 239 68 68;
-    --destructive-foreground: 255 255 255;
-
-    --border: 58 58 66;
-    --input: 58 58 66;
-    --ring: 37 99 235;
-
-    --radius: 0.75rem;
-
-    --sidebar-background: 26 26 29;
-    --sidebar-foreground: 243 244 246;
-    --sidebar-primary: 37 99 235;
-    --sidebar-primary-foreground: 255 255 255;
-    --sidebar-accent: 58 58 66;
-    --sidebar-accent-foreground: 243 244 246;
-    --sidebar-border: 58 58 66;
-    --sidebar-ring: 37 99 235;
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
   }
 }
 
@@ -50,39 +36,92 @@
   * {
     @apply border-border;
   }
-
   body {
-    @apply bg-industrial-900 text-foreground font-sans;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold tracking-tight;
+    @apply bg-background text-foreground;
   }
 }
 
-@layer components {
-  .btn-large {
-    @apply px-8 py-6 text-xl font-semibold rounded-xl min-h-[80px] touch-manipulation;
+/* Custom industrial theme colors */
+:root {
+  --industrial-900: #0f172a;
+  --industrial-800: #1e293b;
+  --industrial-700: #334155;
+  --industrial-600: #475569;
+  --industrial-500: #64748b;
+  --industrial-400: #94a3b8;
+  --industrial-300: #cbd5e1;
+  --industrial-200: #e2e8f0;
+  --industrial-100: #f1f5f9;
+  --primary: #3b82f6;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+}
+
+/* Custom component styles */
+.btn-large {
+  @apply h-16 px-8 text-lg font-semibold;
+}
+
+.input-large {
+  @apply h-16 px-6 text-lg;
+}
+
+.card-selectable {
+  @apply p-6 bg-industrial-800 border-industrial-600 cursor-pointer transition-all duration-200 hover:border-industrial-500 hover:bg-industrial-700;
+}
+
+.status-available {
+  @apply bg-success text-white;
+}
+
+.status-low {
+  @apply bg-warning text-white;
+}
+
+.status-unavailable {
+  @apply bg-danger text-white;
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
   }
   
-  .input-large {
-    @apply px-6 py-4 text-xl rounded-xl min-h-[80px] touch-manipulation;
+  body {
+    background: white !important;
+    color: black !important;
   }
   
-  .card-selectable {
-    @apply p-6 rounded-xl border-2 border-industrial-600 bg-industrial-800 hover:border-primary hover:bg-industrial-700 transition-all duration-200 cursor-pointer touch-manipulation;
+  .print\:shadow-none {
+    box-shadow: none !important;
   }
   
-  .status-available {
-    @apply bg-success text-white;
+  @page {
+    margin: 1in;
+    size: A4;
   }
   
-  .status-low {
-    @apply bg-warning text-white;
+  .page-break {
+    page-break-before: always;
   }
   
-  .status-unavailable {
-    @apply bg-danger text-white;
+  table {
+    page-break-inside: avoid;
   }
+  
+  tr {
+    page-break-inside: avoid;
+  }
+}
+
+/* Animations for status changes */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
 }

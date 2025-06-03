@@ -5,10 +5,13 @@ import DriverScreen2 from '../components/DriverScreen2';
 import DriverScreen3 from '../components/DriverScreen3';
 import DriverScreen4 from '../components/DriverScreen4';
 import DriverScreen5 from '../components/DriverScreen5';
+import DriverScreen6 from '../components/DriverScreen6';
+import DeliveryNotePrint from '../components/DeliveryNotePrint';
+import NonRegDriverInvoice from '../components/NonRegDriverInvoice';
 import { useOrders } from '../contexts/OrderContext';
 import { Address, Product } from '../types';
 
-type DriverStep = 1 | 2 | 3 | 4 | 5;
+type DriverStep = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
 interface DriverData {
   weight?: number;
@@ -17,6 +20,9 @@ interface DriverData {
   address?: Address;
   product?: Product;
   quantity?: number;
+  netWeight?: number;
+  tareWeight?: number;
+  isRegistered?: boolean;
 }
 
 const DriverFlow = () => {
@@ -24,8 +30,15 @@ const DriverFlow = () => {
   const [driverData, setDriverData] = useState<DriverData>({});
   const { addOrder } = useOrders();
 
+  // Mock function to check if customer is registered
+  const isRegisteredCustomer = (customerName: string) => {
+    const registeredCustomers = ['Acme Corp', 'BuildCo Ltd', 'Construction Plus'];
+    return registeredCustomers.includes(customerName);
+  };
+
   const handleStep1Next = (data: { weight: number; numberPlate: string; customerName: string }) => {
-    setDriverData(prev => ({ ...prev, ...data }));
+    const isRegistered = isRegisteredCustomer(data.customerName);
+    setDriverData(prev => ({ ...prev, ...data, isRegistered }));
     setCurrentStep(2);
   };
 
@@ -52,19 +65,41 @@ const DriverFlow = () => {
         customerName: driverData.customerName,
         products: [{ productId: driverData.product.id, quantity: driverData.quantity }],
         address: driverData.address,
-        status: 'pending',
+        status: 'in-progress',
         type: 'loading',
         grossWeight: driverData.weight
       });
     }
     
-    // Reset flow
+    // Move to post-loading weight check
+    setCurrentStep(6);
+  };
+
+  const handleStep6Next = (netWeight: number, tareWeight: number) => {
+    setDriverData(prev => ({ ...prev, netWeight, tareWeight }));
+    
+    // For registered customers, go to delivery note; for non-registered, go to invoice
+    if (driverData.isRegistered) {
+      setCurrentStep(7);
+    } else {
+      setCurrentStep(8);
+    }
+  };
+
+  const handleDeliveryNoteDone = () => {
+    // Reset flow for registered customers
+    setCurrentStep(1);
+    setDriverData({});
+  };
+
+  const handlePaymentComplete = () => {
+    // Reset flow for non-registered customers
     setCurrentStep(1);
     setDriverData({});
   };
 
   const handlePrevious = () => {
-    if (currentStep > 1) {
+    if (currentStep > 1 && currentStep <= 5) {
       setCurrentStep((currentStep - 1) as DriverStep);
     }
   };
@@ -100,6 +135,39 @@ const DriverFlow = () => {
           product={driverData.product!}
           quantity={driverData.quantity!}
           onDone={handleStep5Done}
+        />
+      );
+    case 6:
+      return (
+        <DriverScreen6
+          product={driverData.product!}
+          quantity={driverData.quantity!}
+          grossWeight={driverData.weight!}
+          onNext={handleStep6Next}
+        />
+      );
+    case 7:
+      return (
+        <DeliveryNotePrint
+          product={driverData.product!}
+          quantity={driverData.quantity!}
+          netWeight={driverData.netWeight!}
+          tareWeight={driverData.tareWeight!}
+          customerName={driverData.customerName!}
+          numberPlate={driverData.numberPlate!}
+          onDone={handleDeliveryNoteDone}
+        />
+      );
+    case 8:
+      return (
+        <NonRegDriverInvoice
+          product={driverData.product!}
+          quantity={driverData.quantity!}
+          netWeight={driverData.netWeight!}
+          tareWeight={driverData.tareWeight!}
+          customerName={driverData.customerName!}
+          numberPlate={driverData.numberPlate!}
+          onPayment={handlePaymentComplete}
         />
       );
     default:
