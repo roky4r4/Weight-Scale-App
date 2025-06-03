@@ -42,7 +42,7 @@ const DriverFlow = () => {
     setCurrentStep(2);
   };
 
-  const handleStep2Next = (address: Address) => {
+  const handleStep2Next = (address: Address | null) => {
     setDriverData(prev => ({ ...prev, address }));
     setCurrentStep(3);
   };

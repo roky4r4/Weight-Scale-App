@@ -3,18 +3,19 @@ import { useState } from 'react';
 import { useLanguage } from '../hooks/useLanguage';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
-import { Plus } from 'lucide-react';
+import { Plus, MapPin } from 'lucide-react';
 import Header from './Header';
 import { Address } from '../types';
 
 interface DriverScreen2Props {
-  onNext: (address: Address) => void;
+  onNext: (address: Address | null) => void;
   onPrevious: () => void;
 }
 
 const DriverScreen2 = ({ onNext, onPrevious }: DriverScreen2Props) => {
   const { t } = useLanguage();
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
+  const [noAddressSelected, setNoAddressSelected] = useState(false);
   
   const predefinedAddresses: Address[] = [
     {
@@ -42,10 +43,16 @@ const DriverScreen2 = ({ onNext, onPrevious }: DriverScreen2Props) => {
 
   const handleAddressSelect = (address: Address) => {
     setSelectedAddress(address);
+    setNoAddressSelected(false);
+  };
+
+  const handleNoAddressSelect = () => {
+    setSelectedAddress(null);
+    setNoAddressSelected(true);
   };
 
   const handleNext = () => {
-    if (selectedAddress) {
+    if (selectedAddress || noAddressSelected) {
       onNext(selectedAddress);
     }
   };
@@ -57,6 +64,32 @@ const DriverScreen2 = ({ onNext, onPrevious }: DriverScreen2Props) => {
       <div className="container mx-auto px-6 py-8">
         <div className="max-w-4xl mx-auto space-y-8">
           
+          {/* No Delivery Address Option */}
+          <Card
+            className={`card-selectable ${
+              noAddressSelected 
+                ? 'border-primary bg-primary/10' 
+                : ''
+            }`}
+            onClick={handleNoAddressSelect}
+          >
+            <div className="flex items-center space-x-4">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-industrial-600 rounded-full flex items-center justify-center">
+                  <MapPin size={24} className="text-industrial-300" />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <div className="text-lg font-semibold text-white">
+                  No Delivery Address Required
+                </div>
+                <div className="text-industrial-300">
+                  Select this option if no delivery address is needed
+                </div>
+              </div>
+            </div>
+          </Card>
+
           <div className="grid gap-6 md:grid-cols-2">
             {predefinedAddresses.map((address) => (
               <Card
@@ -104,7 +137,7 @@ const DriverScreen2 = ({ onNext, onPrevious }: DriverScreen2Props) => {
             
             <Button
               onClick={handleNext}
-              disabled={!selectedAddress}
+              disabled={!selectedAddress && !noAddressSelected}
               className="btn-large bg-primary hover:bg-blue-600 text-white"
               size="lg"
             >
