@@ -94,15 +94,6 @@ const DriverScreen4 = ({ product, onNext, onPrevious }: DriverScreen4Props) => {
                 </Button>
               ))}
             </div>
-            
-            <Button
-              onClick={() => handlePresetSelect(50)}
-              variant={quantity === 50 ? 'default' : 'outline'}
-              className="btn-large text-xl mt-4 w-full"
-              size="lg"
-            >
-              {t('screen4.full.load')}
-            </Button>
           </div>
 
           {/* Manual Quantity Input */}

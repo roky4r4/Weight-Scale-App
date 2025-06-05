@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLanguage } from '../hooks/useLanguage';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -15,6 +15,25 @@ const DriverScreen1 = ({ onNext }: DriverScreen1Props) => {
   const [detectedWeight] = useState(1650);
   const [detectedPlate, setDetectedPlate] = useState('AB-123-CD');
   const [customerName, setCustomerName] = useState('');
+  const [detectedCustomerName, setDetectedCustomerName] = useState('');
+
+  // Mock function to get customer name by number plate
+  const getCustomerByPlate = (plate: string) => {
+    const registeredPlates = {
+      'AB-123-CD': 'Acme Corp',
+      'DE-456-FG': 'BuildCo Ltd', 
+      'HI-789-JK': 'Construction Plus'
+    };
+    return registeredPlates[plate] || '';
+  };
+
+  useEffect(() => {
+    const detected = getCustomerByPlate(detectedPlate);
+    setDetectedCustomerName(detected);
+    if (detected) {
+      setCustomerName(detected);
+    }
+  }, [detectedPlate]);
 
   const handleConfirm = () => {
     if (customerName.trim()) {
@@ -55,13 +74,23 @@ const DriverScreen1 = ({ onNext }: DriverScreen1Props) => {
                 {detectedPlate}
               </div>
               
+              {detectedCustomerName && (
+                <div className="mb-6">
+                  <div className="text-2xl text-success font-semibold">
+                    Registered: {detectedCustomerName}
+                  </div>
+                </div>
+              )}
+              
               <div className="mt-6">
                 <label className="block text-industrial-300 text-lg mb-4">
                   {t('screen1.not.you')}
                 </label>
                 <Input
                   value={detectedPlate}
-                  onChange={(e) => setDetectedPlate(e.target.value)}
+                  onChange={(e) => {
+                    setDetectedPlate(e.target.value);
+                  }}
                   className="input-large text-center text-2xl font-mono bg-industrial-700 border-industrial-500"
                   placeholder="XX-123-XX"
                 />
