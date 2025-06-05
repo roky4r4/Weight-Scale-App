@@ -2,7 +2,7 @@
 import { useLanguage } from '../hooks/useLanguage';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
-import { Truck, ArrowDown } from 'lucide-react';
+import { ArrowUp, ArrowDown } from 'lucide-react';
 import Header from './Header';
 
 interface DriverWelcomeScreenProps {
@@ -36,10 +36,10 @@ const DriverWelcomeScreen = ({ onSelectAction }: DriverWelcomeScreenProps) => {
             <Card className="p-8 bg-industrial-800 border-industrial-600">
               <Button
                 onClick={() => onSelectAction('pickup')}
-                className="w-full h-32 bg-primary hover:bg-blue-600 text-white text-3xl font-semibold flex flex-col items-center justify-center space-y-4"
+                className="w-full h-32 bg-primary hover:bg-blue-600 text-white text-3xl font-semibold flex items-center justify-center space-x-4"
                 size="lg"
               >
-                <Truck size={48} />
+                <ArrowUp size={48} />
                 <span>{t('welcome.pickup.load')}</span>
               </Button>
             </Card>
@@ -48,7 +48,7 @@ const DriverWelcomeScreen = ({ onSelectAction }: DriverWelcomeScreenProps) => {
             <Card className="p-8 bg-industrial-800 border-industrial-600">
               <Button
                 onClick={() => onSelectAction('delivery')}
-                className="w-full h-32 bg-success hover:bg-green-600 text-white text-3xl font-semibold flex flex-col items-center justify-center space-y-4"
+                className="w-full h-32 bg-success hover:bg-green-600 text-white text-3xl font-semibold flex items-center justify-center space-x-4"
                 size="lg"
               >
                 <ArrowDown size={48} />

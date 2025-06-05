@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import DriverWelcomeScreen from '../components/DriverWelcomeScreen';
 import DriverScreen1 from '../components/DriverScreen1';
@@ -94,20 +95,20 @@ const DriverFlow = () => {
 
   const handleDeliveryNoteDone = () => {
     // Reset flow for registered customers
-    setCurrentStep(1);
+    setCurrentStep('welcome');
     setDriverData({});
   };
 
   const handlePaymentComplete = () => {
     // Reset flow for non-registered customers
-    setCurrentStep(1);
+    setCurrentStep('welcome');
     setDriverData({});
   };
 
   const handlePrevious = () => {
     if (currentStep === 1) {
       setCurrentStep('welcome');
-    } else if (currentStep > 1 && currentStep <= 5) {
+    } else if (typeof currentStep === 'number' && currentStep > 1 && currentStep <= 5) {
       setCurrentStep((currentStep - 1) as DriverStep);
     }
   };
