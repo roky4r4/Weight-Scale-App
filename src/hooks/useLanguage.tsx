@@ -1,4 +1,3 @@
-
 import React, { useState, useContext, createContext, ReactNode } from 'react';
 
 export type Language = 'en' | 'de';
@@ -22,6 +21,13 @@ const translations = {
     'common.edit': 'Edit',
     'common.delete': 'Delete',
     'common.save': 'Save',
+    
+    // Welcome Screen
+    'welcome.title': 'Driver Interface',
+    'welcome.greeting': 'Welcome Driver',
+    'welcome.choose.action': 'What would you like to do today?',
+    'welcome.pickup.load': 'Pickup / Load',
+    'welcome.delivery.unload': 'Delivery / Unload',
     
     // Screen 1
     'screen1.title': 'Weight Confirmation',
@@ -107,6 +113,13 @@ const translations = {
     'common.edit': 'Bearbeiten',
     'common.delete': 'Löschen',
     'common.save': 'Speichern',
+    
+    // Welcome Screen
+    'welcome.title': 'Fahrer Interface',
+    'welcome.greeting': 'Willkommen Fahrer',
+    'welcome.choose.action': 'Was möchten Sie heute tun?',
+    'welcome.pickup.load': 'Abholung / Beladen',
+    'welcome.delivery.unload': 'Lieferung / Entladen',
     
     // Screen 1
     'screen1.title': 'Gewichtsbestätigung',

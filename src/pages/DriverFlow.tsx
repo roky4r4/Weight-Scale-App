@@ -1,5 +1,5 @@
-
 import { useState } from 'react';
+import DriverWelcomeScreen from '../components/DriverWelcomeScreen';
 import DriverScreen1 from '../components/DriverScreen1';
 import DriverScreen2 from '../components/DriverScreen2';
 import DriverScreen3 from '../components/DriverScreen3';
@@ -11,9 +11,10 @@ import NonRegDriverInvoice from '../components/NonRegDriverInvoice';
 import { useOrders } from '../contexts/OrderContext';
 import { Address, Product } from '../types';
 
-type DriverStep = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+type DriverStep = 'welcome' | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
 interface DriverData {
+  action?: 'pickup' | 'delivery';
   weight?: number;
   numberPlate?: string;
   customerName?: string;
@@ -26,7 +27,7 @@ interface DriverData {
 }
 
 const DriverFlow = () => {
-  const [currentStep, setCurrentStep] = useState<DriverStep>(1);
+  const [currentStep, setCurrentStep] = useState<DriverStep>('welcome');
   const [driverData, setDriverData] = useState<DriverData>({});
   const { addOrder } = useOrders();
 
@@ -34,6 +35,11 @@ const DriverFlow = () => {
   const isRegisteredCustomer = (customerName: string) => {
     const registeredCustomers = ['Acme Corp', 'BuildCo Ltd', 'Construction Plus'];
     return registeredCustomers.includes(customerName);
+  };
+
+  const handleWelcomeNext = (action: 'pickup' | 'delivery') => {
+    setDriverData(prev => ({ ...prev, action }));
+    setCurrentStep(1);
   };
 
   const handleStep1Next = (data: { weight: number; numberPlate: string; customerName: string }) => {
@@ -99,12 +105,16 @@ const DriverFlow = () => {
   };
 
   const handlePrevious = () => {
-    if (currentStep > 1 && currentStep <= 5) {
+    if (currentStep === 1) {
+      setCurrentStep('welcome');
+    } else if (currentStep > 1 && currentStep <= 5) {
       setCurrentStep((currentStep - 1) as DriverStep);
     }
   };
 
   switch (currentStep) {
+    case 'welcome':
+      return <DriverWelcomeScreen onSelectAction={handleWelcomeNext} />;
     case 1:
       return <DriverScreen1 onNext={handleStep1Next} />;
     case 2:
@@ -172,7 +182,7 @@ const DriverFlow = () => {
         />
       );
     default:
-      return <DriverScreen1 onNext={handleStep1Next} />;
+      return <DriverWelcomeScreen onSelectAction={handleWelcomeNext} />;
   }
 };
 
