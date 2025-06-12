@@ -20,8 +20,8 @@ interface DriverData {
   numberPlate?: string;
   customerName?: string;
   address?: Address;
-  product?: Product;
-  quantity?: number;
+  products?: Product[];
+  quantities?: Record<string, number>;
   netWeight?: number;
   tareWeight?: number;
   isRegistered?: boolean;
@@ -54,23 +54,28 @@ const DriverFlow = () => {
     setCurrentStep(3);
   };
 
-  const handleStep3Next = (product: Product) => {
-    setDriverData(prev => ({ ...prev, product }));
+  const handleStep3Next = (products: Product[]) => {
+    setDriverData(prev => ({ ...prev, products }));
     setCurrentStep(4);
   };
 
-  const handleStep4Next = (quantity: number) => {
-    setDriverData(prev => ({ ...prev, quantity }));
+  const handleStep4Next = (quantities: Record<string, number>) => {
+    setDriverData(prev => ({ ...prev, quantities }));
     setCurrentStep(5);
   };
 
   const handleStep5Done = () => {
     // Create the order when the driver completes the flow
-    if (driverData.numberPlate && driverData.product && driverData.quantity && driverData.customerName) {
+    if (driverData.numberPlate && driverData.products && driverData.quantities && driverData.customerName) {
+      const orderProducts = driverData.products.map(product => ({
+        productId: product.id,
+        quantity: driverData.quantities![product.id] || 0
+      }));
+
       addOrder({
         truckId: driverData.numberPlate,
         customerName: driverData.customerName,
-        products: [{ productId: driverData.product.id, quantity: driverData.quantity }],
+        products: orderProducts,
         address: driverData.address,
         status: 'in-progress',
         type: 'loading',
@@ -113,6 +118,13 @@ const DriverFlow = () => {
     }
   };
 
+  // Helper to get first product for components that expect single product
+  const getFirstProduct = () => driverData.products?.[0];
+  const getFirstQuantity = () => {
+    const firstProduct = getFirstProduct();
+    return firstProduct ? driverData.quantities?.[firstProduct.id] || 0 : 0;
+  };
+
   switch (currentStep) {
     case 'welcome':
       return <DriverWelcomeScreen onSelectAction={handleWelcomeNext} />;
@@ -136,7 +148,7 @@ const DriverFlow = () => {
     case 4:
       return (
         <DriverScreen4 
-          product={driverData.product!}
+          products={driverData.products || []}
           onNext={handleStep4Next} 
           onPrevious={handlePrevious}
         />
@@ -144,16 +156,16 @@ const DriverFlow = () => {
     case 5:
       return (
         <DriverScreen5 
-          product={driverData.product!}
-          quantity={driverData.quantity!}
+          products={driverData.products || []}
+          quantities={driverData.quantities || {}}
           onDone={handleStep5Done}
         />
       );
     case 6:
       return (
         <DriverScreen6
-          product={driverData.product!}
-          quantity={driverData.quantity!}
+          product={getFirstProduct()!}
+          quantity={getFirstQuantity()}
           grossWeight={driverData.weight!}
           onNext={handleStep6Next}
         />
@@ -161,8 +173,8 @@ const DriverFlow = () => {
     case 7:
       return (
         <DeliveryNotePrint
-          product={driverData.product!}
-          quantity={driverData.quantity!}
+          product={getFirstProduct()!}
+          quantity={getFirstQuantity()}
           netWeight={driverData.netWeight!}
           tareWeight={driverData.tareWeight!}
           customerName={driverData.customerName!}
@@ -173,8 +185,8 @@ const DriverFlow = () => {
     case 8:
       return (
         <NonRegDriverInvoice
-          product={driverData.product!}
-          quantity={driverData.quantity!}
+          product={getFirstProduct()!}
+          quantity={getFirstQuantity()}
           netWeight={driverData.netWeight!}
           tareWeight={driverData.tareWeight!}
           customerName={driverData.customerName!}
