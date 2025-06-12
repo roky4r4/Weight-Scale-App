@@ -9,8 +9,8 @@ import Header from './Header';
 import { Product } from '../types';
 
 interface NonRegDriverInvoiceProps {
-  product: Product;
-  quantity: number;
+  products: Product[];
+  quantities: Record<string, number>;
   netWeight: number;
   tareWeight: number;
   customerName: string;
@@ -19,8 +19,8 @@ interface NonRegDriverInvoiceProps {
 }
 
 const NonRegDriverInvoice = ({ 
-  product, 
-  quantity, 
+  products, 
+  quantities, 
   netWeight, 
   tareWeight, 
   customerName, 
@@ -33,8 +33,22 @@ const NonRegDriverInvoice = ({
   const invoiceNumber = `INV-${Date.now()}`;
   const currentDate = new Date().toLocaleDateString();
   const actualTons = netWeight / 1000;
-  const pricePerTon = product.price || 45;
-  const subtotal = actualTons * pricePerTon;
+
+  // Calculate totals based on actual delivered weight proportionally
+  const getTotalOrderedQuantity = () => {
+    return Object.values(quantities).reduce((sum, qty) => sum + qty, 0);
+  };
+
+  const getSubtotal = () => {
+    return products.reduce((total, product) => {
+      const orderedQty = quantities[product.id] || 0;
+      const pricePerTon = product.price || 45;
+      const proportionalDeliveredQty = (orderedQty / getTotalOrderedQuantity()) * actualTons;
+      return total + (proportionalDeliveredQty * pricePerTon);
+    }, 0);
+  };
+
+  const subtotal = getSubtotal();
   const taxRate = 0.19; // 19% VAT
   const taxAmount = subtotal * taxRate;
   const total = subtotal + taxAmount;
@@ -111,19 +125,36 @@ const NonRegDriverInvoice = ({
                   <thead>
                     <tr className="bg-gray-100">
                       <th className="border border-gray-300 p-3 text-left">Product</th>
-                      <th className="border border-gray-300 p-3 text-right">Quantity</th>
+                      <th className="border border-gray-300 p-3 text-right">Ordered</th>
+                      <th className="border border-gray-300 p-3 text-right">Delivered</th>
                       <th className="border border-gray-300 p-3 text-right">Price/Ton</th>
                       <th className="border border-gray-300 p-3 text-right">Amount</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td className="border border-gray-300 p-3">
-                        <div className="font-medium">{product.name}</div>
-                        <div className="text-sm text-gray-600">{product.description}</div>
-                      </td>
+                    {products.map((product) => {
+                      const orderedQty = quantities[product.id] || 0;
+                      const pricePerTon = product.price || 45;
+                      const proportionalDeliveredQty = (orderedQty / getTotalOrderedQuantity()) * actualTons;
+                      const amount = proportionalDeliveredQty * pricePerTon;
+                      
+                      return (
+                        <tr key={product.id}>
+                          <td className="border border-gray-300 p-3">
+                            <div className="font-medium">{product.name}</div>
+                            <div className="text-sm text-gray-600">{product.description}</div>
+                          </td>
+                          <td className="border border-gray-300 p-3 text-right">{orderedQty} tons</td>
+                          <td className="border border-gray-300 p-3 text-right">{proportionalDeliveredQty.toFixed(1)} tons</td>
+                          <td className="border border-gray-300 p-3 text-right">€{pricePerTon}</td>
+                          <td className="border border-gray-300 p-3 text-right">€{amount.toFixed(2)}</td>
+                        </tr>
+                      );
+                    })}
+                    <tr className="bg-gray-50 font-semibold">
+                      <td className="border border-gray-300 p-3" colSpan={2}>Total</td>
                       <td className="border border-gray-300 p-3 text-right">{actualTons.toFixed(1)} tons</td>
-                      <td className="border border-gray-300 p-3 text-right">€{pricePerTon}</td>
+                      <td className="border border-gray-300 p-3"></td>
                       <td className="border border-gray-300 p-3 text-right">€{subtotal.toFixed(2)}</td>
                     </tr>
                   </tbody>

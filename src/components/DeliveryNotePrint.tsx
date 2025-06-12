@@ -1,3 +1,4 @@
+
 import { useLanguage } from '../hooks/useLanguage';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -6,8 +7,8 @@ import Header from './Header';
 import { Product } from '../types';
 
 interface DeliveryNotePrintProps {
-  product: Product;
-  quantity: number;
+  products: Product[];
+  quantities: Record<string, number>;
   netWeight: number;
   tareWeight: number;
   customerName: string;
@@ -16,8 +17,8 @@ interface DeliveryNotePrintProps {
 }
 
 const DeliveryNotePrint = ({ 
-  product, 
-  quantity, 
+  products, 
+  quantities, 
   netWeight, 
   tareWeight, 
   customerName, 
@@ -31,6 +32,14 @@ const DeliveryNotePrint = ({
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const getTotalOrderedQuantity = () => {
+    return Object.values(quantities).reduce((sum, qty) => sum + qty, 0);
+  };
+
+  const getUniqueStockyardAreas = () => {
+    return [...new Set(products.map(p => p.stockyardArea))];
   };
 
   return (
@@ -84,10 +93,10 @@ const DeliveryNotePrint = ({
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg mb-3">Loading Location</h3>
+                  <h3 className="font-semibold text-lg mb-3">Loading Locations</h3>
                   <div className="space-y-2">
-                    <div><span className="font-medium">Area:</span> {product.stockyardArea}</div>
-                    <div><span className="font-medium">Product:</span> {product.name}</div>
+                    <div><span className="font-medium">Areas:</span> {getUniqueStockyardAreas().join(', ')}</div>
+                    <div><span className="font-medium">Products:</span> {products.length} items</div>
                   </div>
                 </div>
               </div>
@@ -99,19 +108,24 @@ const DeliveryNotePrint = ({
                   <thead>
                     <tr className="bg-gray-100">
                       <th className="border border-gray-300 p-3 text-left">Product</th>
-                      <th className="border border-gray-300 p-3 text-left">Description</th>
+                      <th className="border border-gray-300 p-3 text-left">Location</th>
                       <th className="border border-gray-300 p-3 text-right">Ordered</th>
-                      <th className="border border-gray-300 p-3 text-right">Delivered</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td className="border border-gray-300 p-3">{product.name}</td>
-                      <td className="border border-gray-300 p-3">{product.description}</td>
-                      <td className="border border-gray-300 p-3 text-right">{quantity} tons</td>
-                      <td className="border border-gray-300 p-3 text-right font-semibold">
-                        {(netWeight / 1000).toFixed(1)} tons
-                      </td>
+                    {products.map((product) => (
+                      <tr key={product.id}>
+                        <td className="border border-gray-300 p-3">
+                          <div className="font-medium">{product.name}</div>
+                          <div className="text-sm text-gray-600">{product.description}</div>
+                        </td>
+                        <td className="border border-gray-300 p-3">{product.stockyardArea}</td>
+                        <td className="border border-gray-300 p-3 text-right">{quantities[product.id]} tons</td>
+                      </tr>
+                    ))}
+                    <tr className="bg-gray-50 font-semibold">
+                      <td className="border border-gray-300 p-3" colSpan={2}>Total</td>
+                      <td className="border border-gray-300 p-3 text-right">{getTotalOrderedQuantity()} tons</td>
                     </tr>
                   </tbody>
                 </table>
@@ -132,6 +146,7 @@ const DeliveryNotePrint = ({
                   <div className="border border-gray-300 p-4 bg-blue-50">
                     <div className="font-medium">Net Weight</div>
                     <div className="text-xl font-bold">{netWeight} kg</div>
+                    <div className="text-sm text-gray-600">({(netWeight / 1000).toFixed(1)} tons delivered)</div>
                   </div>
                 </div>
               </div>

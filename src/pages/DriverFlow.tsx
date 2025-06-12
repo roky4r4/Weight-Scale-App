@@ -164,8 +164,8 @@ const DriverFlow = () => {
     case 6:
       return (
         <DriverScreen6
-          product={getFirstProduct()!}
-          quantity={getFirstQuantity()}
+          products={driverData.products || []}
+          quantities={driverData.quantities || {}}
           grossWeight={driverData.weight!}
           onNext={handleStep6Next}
         />
@@ -173,8 +173,8 @@ const DriverFlow = () => {
     case 7:
       return (
         <DeliveryNotePrint
-          product={getFirstProduct()!}
-          quantity={getFirstQuantity()}
+          products={driverData.products || []}
+          quantities={driverData.quantities || {}}
           netWeight={driverData.netWeight!}
           tareWeight={driverData.tareWeight!}
           customerName={driverData.customerName!}
@@ -185,8 +185,8 @@ const DriverFlow = () => {
     case 8:
       return (
         <NonRegDriverInvoice
-          product={getFirstProduct()!}
-          quantity={getFirstQuantity()}
+          products={driverData.products || []}
+          quantities={driverData.quantities || {}}
           netWeight={driverData.netWeight!}
           tareWeight={driverData.tareWeight!}
           customerName={driverData.customerName!}

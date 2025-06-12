@@ -8,13 +8,13 @@ import Header from './Header';
 import { Product } from '../types';
 
 interface DriverScreen6Props {
-  product: Product;
-  quantity: number;
+  products: Product[];
+  quantities: Record<string, number>;
   grossWeight: number;
   onNext: (netWeight: number, tareWeight: number) => void;
 }
 
-const DriverScreen6 = ({ product, quantity, grossWeight, onNext }: DriverScreen6Props) => {
+const DriverScreen6 = ({ products, quantities, grossWeight, onNext }: DriverScreen6Props) => {
   const { t } = useLanguage();
   const [loadedWeight] = useState(2850); // Simulated loaded weight
   const tareWeight = grossWeight;
@@ -22,6 +22,10 @@ const DriverScreen6 = ({ product, quantity, grossWeight, onNext }: DriverScreen6
 
   const handleConfirm = () => {
     onNext(netWeight, tareWeight);
+  };
+
+  const getTotalOrderedQuantity = () => {
+    return Object.values(quantities).reduce((sum, qty) => sum + qty, 0);
   };
 
   return (
@@ -67,21 +71,37 @@ const DriverScreen6 = ({ product, quantity, grossWeight, onNext }: DriverScreen6
             </div>
           </Card>
 
-          {/* Product Confirmation */}
+          {/* Products Confirmation */}
           <Card className="p-8 bg-industrial-800 border-industrial-600">
             <h3 className="text-xl font-semibold text-white mb-6">Load Confirmation</h3>
             <div className="space-y-4">
-              <div className="flex justify-between items-center py-2">
-                <span className="text-industrial-300">Product:</span>
-                <span className="text-white font-medium">{product.name}</span>
+              <div className="flex justify-between items-center py-2 border-b border-industrial-600">
+                <span className="text-industrial-300">Total Products:</span>
+                <span className="text-white font-medium">{products.length}</span>
               </div>
-              <div className="flex justify-between items-center py-2">
-                <span className="text-industrial-300">Ordered Quantity:</span>
-                <span className="text-white font-medium">{quantity} tons</span>
+              <div className="flex justify-between items-center py-2 border-b border-industrial-600">
+                <span className="text-industrial-300">Total Ordered Quantity:</span>
+                <span className="text-white font-medium">{getTotalOrderedQuantity()} tons</span>
               </div>
-              <div className="flex justify-between items-center py-2">
+              <div className="flex justify-between items-center py-2 border-b border-industrial-600">
                 <span className="text-industrial-300">Actual Load:</span>
                 <span className="text-white font-medium">{(netWeight / 1000).toFixed(1)} tons</span>
+              </div>
+            </div>
+            
+            {/* Product Details */}
+            <div className="mt-6">
+              <h4 className="text-lg font-medium text-white mb-4">Products Loaded:</h4>
+              <div className="space-y-3">
+                {products.map((product) => (
+                  <div key={product.id} className="flex justify-between items-center py-2 px-4 bg-industrial-700 rounded">
+                    <div>
+                      <span className="text-white font-medium">{product.name}</span>
+                      <span className="text-industrial-300 text-sm ml-2">({product.stockyardArea})</span>
+                    </div>
+                    <span className="text-industrial-300">{quantities[product.id]} tons</span>
+                  </div>
+                ))}
               </div>
             </div>
           </Card>
