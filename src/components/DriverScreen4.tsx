@@ -9,49 +9,50 @@ import Header from './Header';
 import { Product } from '../types';
 
 interface DriverScreen4Props {
-  product: Product;
-  onNext: (quantity: number) => void;
+  products: Product[];
+  onNext: (quantities: Record<string, number>) => void;
   onPrevious: () => void;
 }
 
-const DriverScreen4 = ({ product, onNext, onPrevious }: DriverScreen4Props) => {
+const DriverScreen4 = ({ products, onNext, onPrevious }: DriverScreen4Props) => {
   const { t } = useLanguage();
-  const [quantity, setQuantity] = useState<number>(0);
-  const [manualQuantity, setManualQuantity] = useState<string>('');
+  const [quantities, setQuantities] = useState<Record<string, number>>({});
   
   const presetQuantities = [10, 20, 30, 40];
 
-  const handlePresetSelect = (preset: number) => {
-    setQuantity(preset);
-    setManualQuantity('');
+  const handlePresetSelect = (productId: string, preset: number) => {
+    setQuantities(prev => ({ ...prev, [productId]: preset }));
   };
 
-  const handleManualChange = (value: string) => {
-    setManualQuantity(value);
+  const handleManualChange = (productId: string, value: string) => {
     const parsed = parseFloat(value);
-    if (!isNaN(parsed) && parsed > 0) {
-      setQuantity(parsed);
+    if (!isNaN(parsed) && parsed >= 0) {
+      setQuantities(prev => ({ ...prev, [productId]: parsed }));
+    } else if (value === '') {
+      setQuantities(prev => ({ ...prev, [productId]: 0 }));
     }
   };
 
-  const handleIncrement = () => {
-    const newQuantity = quantity + 1;
-    setQuantity(newQuantity);
-    setManualQuantity(newQuantity.toString());
+  const handleIncrement = (productId: string) => {
+    setQuantities(prev => ({ ...prev, [productId]: (prev[productId] || 0) + 1 }));
   };
 
-  const handleDecrement = () => {
-    if (quantity > 0) {
-      const newQuantity = quantity - 1;
-      setQuantity(newQuantity);
-      setManualQuantity(newQuantity.toString());
-    }
+  const handleDecrement = (productId: string) => {
+    setQuantities(prev => ({ 
+      ...prev, 
+      [productId]: Math.max(0, (prev[productId] || 0) - 1) 
+    }));
   };
 
   const handleNext = () => {
-    if (quantity > 0) {
-      onNext(quantity);
+    const hasQuantities = Object.values(quantities).some(qty => qty > 0);
+    if (hasQuantities) {
+      onNext(quantities);
     }
+  };
+
+  const getTotalQuantity = () => {
+    return Object.values(quantities).reduce((sum, qty) => sum + (qty || 0), 0);
   };
 
   return (
@@ -61,89 +62,86 @@ const DriverScreen4 = ({ product, onNext, onPrevious }: DriverScreen4Props) => {
       <div className="container mx-auto px-6 py-8">
         <div className="max-w-4xl mx-auto space-y-8">
           
-          {/* Selected Product */}
+          {/* Selected Products */}
           <Card className="p-8 bg-industrial-800 border-industrial-600">
-            <div className="text-center">
+            <div className="text-center mb-6">
               <div className="text-industrial-300 text-lg mb-2">
-                {t('screen4.selected.product')}
+                {t('screen4.selected.product')}s
               </div>
-              <div className="text-2xl font-bold text-white mb-4">
-                {product.name}
-              </div>
-              <div className="text-industrial-400">
-                {product.description}
+              <div className="text-lg text-industrial-400">
+                {products.length} product{products.length !== 1 ? 's' : ''} selected
               </div>
             </div>
           </Card>
 
-          {/* Preset Quantities */}
-          <div>
-            <h3 className="text-xl font-semibold text-white mb-6">
-              Quick Select ({t('screen4.quantity.tons')})
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {presetQuantities.map((preset) => (
-                <Button
-                  key={preset}
-                  onClick={() => handlePresetSelect(preset)}
-                  variant={quantity === preset ? 'default' : 'outline'}
-                  className="btn-large text-xl"
-                  size="lg"
-                >
-                  {preset} {t('screen4.quantity.tons')}
-                </Button>
-              ))}
-            </div>
+          {/* Quantity Selection for Each Product */}
+          <div className="space-y-6">
+            {products.map((product) => (
+              <Card key={product.id} className="p-6 bg-industrial-800 border-industrial-600">
+                <div className="mb-4">
+                  <h3 className="text-xl font-bold text-white mb-2">{product.name}</h3>
+                  <p className="text-industrial-400">{product.description}</p>
+                  <p className="text-industrial-300 text-sm mt-1">Location: {product.stockyardArea}</p>
+                </div>
+
+                {/* Preset Quantities */}
+                <div className="mb-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    {presetQuantities.map((preset) => (
+                      <Button
+                        key={preset}
+                        onClick={() => handlePresetSelect(product.id, preset)}
+                        variant={quantities[product.id] === preset ? 'default' : 'outline'}
+                        className="text-sm"
+                        size="sm"
+                      >
+                        {preset} {t('screen4.quantity.tons')}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Manual Quantity Input */}
+                <div className="flex items-center justify-center space-x-2">
+                  <Button
+                    onClick={() => handleDecrement(product.id)}
+                    variant="outline"
+                    size="sm"
+                  >
+                    <Minus size={16} />
+                  </Button>
+                  
+                  <Input
+                    type="number"
+                    value={quantities[product.id] || ''}
+                    onChange={(e) => handleManualChange(product.id, e.target.value)}
+                    className="w-24 text-center"
+                    placeholder="0"
+                    min="0"
+                    step="0.1"
+                  />
+                  
+                  <Button
+                    onClick={() => handleIncrement(product.id)}
+                    variant="outline"
+                    size="sm"
+                  >
+                    <Plus size={16} />
+                  </Button>
+                  
+                  <span className="text-industrial-300 ml-2">
+                    {t('screen4.quantity.tons')}
+                  </span>
+                </div>
+              </Card>
+            ))}
           </div>
 
-          {/* Manual Quantity Input */}
-          <Card className="p-8 bg-industrial-800 border-industrial-600">
-            <div className="text-center">
-              <h3 className="text-xl font-semibold text-white mb-6">
-                {t('screen4.manual.quantity')}
-              </h3>
-              
-              <div className="flex items-center justify-center space-x-4 mb-6">
-                <Button
-                  onClick={handleDecrement}
-                  variant="outline"
-                  size="lg"
-                  className="btn-large"
-                >
-                  <Minus size={24} />
-                </Button>
-                
-                <Input
-                  type="number"
-                  value={manualQuantity}
-                  onChange={(e) => handleManualChange(e.target.value)}
-                  className="input-large text-center text-3xl font-bold w-32"
-                  placeholder="0"
-                  min="0"
-                  step="0.1"
-                />
-                
-                <Button
-                  onClick={handleIncrement}
-                  variant="outline"
-                  size="lg"
-                  className="btn-large"
-                >
-                  <Plus size={24} />
-                </Button>
-              </div>
-              
-              <div className="text-industrial-300 text-lg">
-                {t('screen4.quantity.tons')}
-              </div>
-            </div>
-          </Card>
-
-          {/* Location Info */}
-          {quantity > 0 && (
+          {/* Total Summary */}
+          {getTotalQuantity() > 0 && (
             <Card className="p-6 bg-success/10 border-success">
               <div className="text-center text-success text-lg">
-                {t('screen4.location.info')} <strong>{product.stockyardArea}</strong>
+                Total: {getTotalQuantity()} {t('screen4.quantity.tons')}
               </div>
             </Card>
           )}
@@ -161,7 +159,7 @@ const DriverScreen4 = ({ product, onNext, onPrevious }: DriverScreen4Props) => {
             
             <Button
               onClick={handleNext}
-              disabled={quantity <= 0}
+              disabled={getTotalQuantity() <= 0}
               className="btn-large bg-primary hover:bg-blue-600 text-white"
               size="lg"
             >
