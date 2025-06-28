@@ -38,37 +38,38 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-size: 18px; /* Larger base font for bigger screen */
   }
 }
 
-/* Custom industrial theme colors */
+/* Custom color scheme for 23"x13" display */
 :root {
-  --industrial-900: #0f172a;
-  --industrial-800: #1e293b;
-  --industrial-700: #334155;
-  --industrial-600: #475569;
-  --industrial-500: #64748b;
-  --industrial-400: #94a3b8;
-  --industrial-300: #cbd5e1;
-  --industrial-200: #e2e8f0;
-  --industrial-100: #f1f5f9;
-  --primary: #3b82f6;
-  --success: #10b981;
-  --warning: #f59e0b;
+  --industrial-900: #2a2a2a; /* Darker base using deep gray */
+  --industrial-800: #3a3a3a;
+  --industrial-700: #4a4a4a;
+  --industrial-600: #5a5a5a;
+  --industrial-500: #6a6a6a;
+  --industrial-400: #7a7a7a;
+  --industrial-300: #A7A9AB; /* Deep Gray */
+  --industrial-200: #b7b9bb;
+  --industrial-100: #c7c9cb;
+  --primary: #B9E5FA; /* Blue */
+  --success: #8BC650; /* Green */
+  --warning: #F2C736; /* Yellow */
   --danger: #ef4444;
 }
 
-/* Custom component styles */
+/* Optimized component styles for large display */
 .btn-large {
-  @apply h-16 px-8 text-lg font-semibold;
+  @apply h-20 px-12 text-2xl font-semibold; /* Larger buttons for big screen */
 }
 
 .input-large {
-  @apply h-16 px-6 text-lg;
+  @apply h-20 px-8 text-2xl; /* Larger inputs */
 }
 
 .card-selectable {
-  @apply p-6 bg-industrial-800 border-industrial-600 cursor-pointer transition-all duration-200 hover:border-industrial-500 hover:bg-industrial-700;
+  @apply p-8 bg-industrial-800 border-industrial-600 cursor-pointer transition-all duration-200 hover:border-primary hover:bg-industrial-700;
 }
 
 .status-available {
@@ -76,11 +77,24 @@
 }
 
 .status-low {
-  @apply bg-warning text-white;
+  @apply bg-warning text-black; /* Black text on yellow for better contrast */
 }
 
 .status-unavailable {
   @apply bg-danger text-white;
+}
+
+/* Typography scaling for large display */
+h1 { @apply text-5xl; }
+h2 { @apply text-4xl; }
+h3 { @apply text-3xl; }
+h4 { @apply text-2xl; }
+h5 { @apply text-xl; }
+h6 { @apply text-lg; }
+
+/* Container adjustments for wide screen */
+.container {
+  max-width: 90%; /* Use more of the wide screen */
 }
 
 /* Print styles */
@@ -118,10 +132,21 @@
 
 /* Animations for status changes */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .fade-in {
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Large screen specific adjustments */
+@media (min-width: 1200px) {
+  .grid-large-screen {
+    grid-template-columns: repeat(3, 1fr); /* Better use of wide screen */
+  }
+  
+  .spacing-large {
+    @apply space-y-12; /* More spacing for large display */
+  }
 }
