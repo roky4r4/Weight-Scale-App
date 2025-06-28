@@ -37,80 +37,50 @@
     @apply border-border;
   }
   body {
-    @apply bg-blue text-deepGray;
-    font-size: 18px; /* Larger base font for bigger screen */
+    @apply bg-background text-foreground;
   }
 }
 
-/* Custom color scheme for 23"x13" display */
+/* Custom industrial theme colors */
 :root {
-  --deep-gray: #A7A9AB; /* Deep Gray for headers, navigation, text */
-  --blue: #B9E5FA; /* Blue for backgrounds/sections */
-  --green: #8BC650; /* Green for action buttons */
-  --yellow: #F2C736; /* Yellow for warnings/highlights */
+  --industrial-900: #0f172a;
+  --industrial-800: #1e293b;
+  --industrial-700: #334155;
+  --industrial-600: #475569;
+  --industrial-500: #64748b;
+  --industrial-400: #94a3b8;
+  --industrial-300: #cbd5e1;
+  --industrial-200: #e2e8f0;
+  --industrial-100: #f1f5f9;
+  --primary: #3b82f6;
+  --success: #10b981;
+  --warning: #f59e0b;
   --danger: #ef4444;
 }
 
-/* Header/Footer/Navigation - Deep Gray foundation */
-.header-nav {
-  @apply bg-deepGray text-white;
-}
-
-/* Action Buttons - Green for main CTAs */
-.btn-action {
-  @apply bg-green hover:bg-green/90 text-white;
-}
-
+/* Custom component styles */
 .btn-large {
-  @apply h-20 px-12 text-2xl font-semibold; /* Larger buttons for big screen */
-}
-
-/* Warning/Highlight elements - Yellow */
-.warning-highlight {
-  @apply bg-yellow text-black;
-}
-
-/* Background sections - Blue */
-.section-bg {
-  @apply bg-blue/20;
-}
-
-/* Cards and containers - Light blue background */
-.card-bg {
-  @apply bg-blue/10 border-deepGray/20;
+  @apply h-16 px-8 text-lg font-semibold;
 }
 
 .input-large {
-  @apply h-20 px-8 text-2xl bg-white border-deepGray/30 text-deepGray;
+  @apply h-16 px-6 text-lg;
 }
 
 .card-selectable {
-  @apply p-8 bg-blue/10 border-deepGray/30 cursor-pointer transition-all duration-200 hover:border-green hover:bg-blue/20;
+  @apply p-6 bg-industrial-800 border-industrial-600 cursor-pointer transition-all duration-200 hover:border-industrial-500 hover:bg-industrial-700;
 }
 
 .status-available {
-  @apply bg-green text-white;
+  @apply bg-success text-white;
 }
 
 .status-low {
-  @apply bg-yellow text-black; /* Black text on yellow for better contrast */
+  @apply bg-warning text-white;
 }
 
 .status-unavailable {
   @apply bg-danger text-white;
-}
-
-/* Typography scaling for large display - Deep Gray text */
-h1 { @apply text-5xl text-deepGray; }
-h2 { @apply text-4xl text-deepGray; }
-h3 { @apply text-3xl text-deepGray; }
-h4 { @apply text-2xl text-deepGray; }
-h5 { @apply text-xl text-deepGray; }
-h6 { @apply text-lg text-deepGray; }
-
-/* Container adjustments for wide screen */
-.container {
-  max-width: 90%; /* Use more of the wide screen */
 }
 
 /* Print styles */
@@ -148,21 +118,10 @@ h6 { @apply text-lg text-deepGray; }
 
 /* Animations for status changes */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .fade-in {
-  animation: fadeIn 0.4s ease-out;
-}
-
-/* Large screen specific adjustments */
-@media (min-width: 1200px) {
-  .grid-large-screen {
-    grid-template-columns: repeat(3, 1fr); /* Better use of wide screen */
-  }
-  
-  .spacing-large {
-    @apply space-y-12; /* More spacing for large display */
-  }
+  animation: fadeIn 0.3s ease-out;
 }
