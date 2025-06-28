@@ -37,60 +37,76 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-blue text-deepGray;
     font-size: 18px; /* Larger base font for bigger screen */
   }
 }
 
 /* Custom color scheme for 23"x13" display */
 :root {
-  --industrial-900: #2a2a2a; /* Darker base using deep gray */
-  --industrial-800: #3a3a3a;
-  --industrial-700: #4a4a4a;
-  --industrial-600: #5a5a5a;
-  --industrial-500: #6a6a6a;
-  --industrial-400: #7a7a7a;
-  --industrial-300: #A7A9AB; /* Deep Gray */
-  --industrial-200: #b7b9bb;
-  --industrial-100: #c7c9cb;
-  --primary: #B9E5FA; /* Blue */
-  --success: #8BC650; /* Green */
-  --warning: #F2C736; /* Yellow */
+  --deep-gray: #A7A9AB; /* Deep Gray for headers, navigation, text */
+  --blue: #B9E5FA; /* Blue for backgrounds/sections */
+  --green: #8BC650; /* Green for action buttons */
+  --yellow: #F2C736; /* Yellow for warnings/highlights */
   --danger: #ef4444;
 }
 
-/* Optimized component styles for large display */
+/* Header/Footer/Navigation - Deep Gray foundation */
+.header-nav {
+  @apply bg-deepGray text-white;
+}
+
+/* Action Buttons - Green for main CTAs */
+.btn-action {
+  @apply bg-green hover:bg-green/90 text-white;
+}
+
 .btn-large {
   @apply h-20 px-12 text-2xl font-semibold; /* Larger buttons for big screen */
 }
 
+/* Warning/Highlight elements - Yellow */
+.warning-highlight {
+  @apply bg-yellow text-black;
+}
+
+/* Background sections - Blue */
+.section-bg {
+  @apply bg-blue/20;
+}
+
+/* Cards and containers - Light blue background */
+.card-bg {
+  @apply bg-blue/10 border-deepGray/20;
+}
+
 .input-large {
-  @apply h-20 px-8 text-2xl; /* Larger inputs */
+  @apply h-20 px-8 text-2xl bg-white border-deepGray/30 text-deepGray;
 }
 
 .card-selectable {
-  @apply p-8 bg-industrial-800 border-industrial-600 cursor-pointer transition-all duration-200 hover:border-primary hover:bg-industrial-700;
+  @apply p-8 bg-blue/10 border-deepGray/30 cursor-pointer transition-all duration-200 hover:border-green hover:bg-blue/20;
 }
 
 .status-available {
-  @apply bg-success text-white;
+  @apply bg-green text-white;
 }
 
 .status-low {
-  @apply bg-warning text-black; /* Black text on yellow for better contrast */
+  @apply bg-yellow text-black; /* Black text on yellow for better contrast */
 }
 
 .status-unavailable {
   @apply bg-danger text-white;
 }
 
-/* Typography scaling for large display */
-h1 { @apply text-5xl; }
-h2 { @apply text-4xl; }
-h3 { @apply text-3xl; }
-h4 { @apply text-2xl; }
-h5 { @apply text-xl; }
-h6 { @apply text-lg; }
+/* Typography scaling for large display - Deep Gray text */
+h1 { @apply text-5xl text-deepGray; }
+h2 { @apply text-4xl text-deepGray; }
+h3 { @apply text-3xl text-deepGray; }
+h4 { @apply text-2xl text-deepGray; }
+h5 { @apply text-xl text-deepGray; }
+h6 { @apply text-lg text-deepGray; }
 
 /* Container adjustments for wide screen */
 .container {

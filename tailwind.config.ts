@@ -26,8 +26,8 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: '#B9E5FA', /* Blue */
-					foreground: '#000000' /* Black text on blue */
+					DEFAULT: '#8BC650', /* Green for action buttons */
+					foreground: '#ffffff' /* White text on green */
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -63,7 +63,28 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Custom color scheme for ScaleApp
+				// Specific use case colors
+				deepGray: {
+					DEFAULT: '#A7A9AB', /* Deep Gray for headers, navigation, text */
+					light: '#b9bbbf',
+					dark: '#959799'
+				},
+				blue: {
+					DEFAULT: '#B9E5FA', /* Blue for backgrounds/sections */
+					light: '#d1edfb',
+					dark: '#9dd9f7'
+				},
+				green: {
+					DEFAULT: '#8BC650', /* Green for action buttons */
+					light: '#a5d470',
+					dark: '#7ab044'
+				},
+				yellow: {
+					DEFAULT: '#F2C736', /* Yellow for warnings/highlights */
+					light: '#f5d563',
+					dark: '#e6b629'
+				},
+				// Legacy support
 				industrial: {
 					900: '#2a2a2a',
 					800: '#3a3a3a',
@@ -86,27 +107,6 @@ export default {
 				danger: {
 					DEFAULT: '#ef4444',
 					dark: '#dc2626'
-				},
-				// New color additions
-				blue: {
-					DEFAULT: '#B9E5FA',
-					light: '#d1edfb',
-					dark: '#9dd9f7'
-				},
-				green: {
-					DEFAULT: '#8BC650',
-					light: '#a5d470',
-					dark: '#7ab044'
-				},
-				yellow: {
-					DEFAULT: '#F2C736',
-					light: '#f5d563',
-					dark: '#e6b629'
-				},
-				deepGray: {
-					DEFAULT: '#A7A9AB',
-					light: '#b9bbbf',
-					dark: '#959799'
 				}
 			},
 			borderRadius: {
