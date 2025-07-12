@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useLanguage } from '../hooks/useLanguage';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
-import { Check, Scale, FileText } from 'lucide-react';
+import { Check, Scale } from 'lucide-react';
 import Header from './Header';
 import { Product } from '../types';
 
@@ -17,16 +17,11 @@ interface DriverScreen6Props {
 const DriverScreen6 = ({ products, quantities, grossWeight, onNext }: DriverScreen6Props) => {
   const { t } = useLanguage();
   const [loadedWeight] = useState(2850); // Simulated loaded weight
-  const [isProcessing, setIsProcessing] = useState(false);
   const tareWeight = grossWeight;
   const netWeight = loadedWeight - tareWeight;
 
   const handleConfirm = () => {
-    setIsProcessing(true);
-    // Simulate processing time
-    setTimeout(() => {
-      onNext(netWeight, tareWeight);
-    }, 2000);
+    onNext(netWeight, tareWeight);
   };
 
   const getTotalOrderedQuantity = () => {
@@ -34,118 +29,105 @@ const DriverScreen6 = ({ products, quantities, grossWeight, onNext }: DriverScre
   };
 
   return (
-    <div className="min-h-screen bg-custom-blue">
-      <Header title="Final Weight Check" />
+    <div className="min-h-screen bg-industrial-900">
+      <Header title="Post-Loading Weight Check" />
       
-      <div className="container mx-auto px-8 py-12">
-        <div className="max-w-6xl mx-auto space-y-12">
-          
-          {/* Success Message */}
-          <Card className="p-8 bg-green-100 border-2 border-custom-green text-center">
-            <div className="flex justify-center mb-4">
-              <div className="w-20 h-20 bg-custom-green rounded-full flex items-center justify-center">
-                <Check size={48} className="text-text-dark" />
-              </div>
-            </div>
-            <h2 className="heading-lg text-custom-green mb-2">
-              ✅ Loading Complete!
-            </h2>
-            <p className="text-driver text-text-dark">
-              Your truck has been successfully loaded with materials
-            </p>
-          </Card>
+      <div className="container mx-auto px-6 py-8">
+        <div className="max-w-4xl mx-auto space-y-8">
           
           {/* Weight Confirmation */}
-          <Card className="p-12">
+          <Card className="p-8 bg-industrial-800 border-industrial-600">
             <div className="text-center">
-              <div className="flex justify-center mb-6">
-                <div className="w-20 h-20 bg-custom-yellow/20 rounded-full flex items-center justify-center">
-                  <Scale size={48} className="text-custom-yellow" />
+              <div className="flex justify-center mb-4">
+                <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center">
+                  <Scale size={32} className="text-primary" />
                 </div>
               </div>
-              <div className="weight-label mb-4">
-                Final Loaded Weight
+              <div className="text-industrial-300 text-xl mb-2">
+                Loaded Weight Detected
               </div>
-              <div className="weight-display mb-8">
+              <div className="text-6xl font-bold text-primary mb-4">
                 {loadedWeight} kg
               </div>
             </div>
           </Card>
 
           {/* Weight Breakdown */}
-          <Card className="p-12">
-            <h3 className="heading-md mb-8">📊 Weight Summary</h3>
-            <div className="space-y-6">
-              <div className="flex justify-between items-center py-4 border-b-2 border-gray-200">
-                <span className="text-driver-secondary">Empty Truck Weight:</span>
-                <span className="text-driver font-bold">{grossWeight} kg</span>
+          <Card className="p-8 bg-industrial-800 border-industrial-600">
+            <h3 className="text-xl font-semibold text-white mb-6">Weight Summary</h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center py-3 border-b border-industrial-600">
+                <span className="text-industrial-300">Gross Weight (Empty Truck):</span>
+                <span className="text-white font-medium">{grossWeight} kg</span>
               </div>
-              <div className="flex justify-between items-center py-4 border-b-2 border-gray-200">
-                <span className="text-driver-secondary">Loaded Truck Weight:</span>
-                <span className="text-driver font-bold">{loadedWeight} kg</span>
+              <div className="flex justify-between items-center py-3 border-b border-industrial-600">
+                <span className="text-industrial-300">Loaded Weight:</span>
+                <span className="text-white font-medium">{loadedWeight} kg</span>
               </div>
-              <div className="flex justify-between items-center py-6 border-t-4 border-custom-green bg-green-50 px-6 rounded-lg">
-                <span className="text-2xl font-bold text-custom-green">Net Material Weight:</span>
-                <span className="text-3xl font-black text-custom-green">{netWeight} kg</span>
+              <div className="flex justify-between items-center py-3 border-t-2 border-primary">
+                <span className="text-primary font-semibold">Net Load Weight:</span>
+                <span className="text-primary font-bold text-xl">{netWeight} kg</span>
               </div>
             </div>
           </Card>
 
-          {/* Products Summary */}
-          <Card className="p-12">
-            <h3 className="heading-md mb-8">📦 Materials Loaded</h3>
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="text-center p-4 bg-custom-blue/30 rounded-lg">
-                  <div className="text-3xl font-bold text-text-dark">{products.length}</div>
-                  <div className="text-driver-secondary">Product Types</div>
-                </div>
-                <div className="text-center p-4 bg-custom-blue/30 rounded-lg">
-                  <div className="text-3xl font-bold text-text-dark">{getTotalOrderedQuantity()}</div>
-                  <div className="text-driver-secondary">Tons Ordered</div>
-                </div>
-                <div className="text-center p-4 bg-custom-green/20 rounded-lg">
-                  <div className="text-3xl font-bold text-custom-green">{(netWeight / 1000).toFixed(1)}</div>
-                  <div className="text-driver-secondary">Tons Loaded</div>
-                </div>
+          {/* Products Confirmation */}
+          <Card className="p-8 bg-industrial-800 border-industrial-600">
+            <h3 className="text-xl font-semibold text-white mb-6">Load Confirmation</h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center py-2 border-b border-industrial-600">
+                <span className="text-industrial-300">Total Products:</span>
+                <span className="text-white font-medium">{products.length}</span>
               </div>
-              
-              {/* Product Details */}
-              <div className="space-y-4">
+              <div className="flex justify-between items-center py-2 border-b border-industrial-600">
+                <span className="text-industrial-300">Total Ordered Quantity:</span>
+                <span className="text-white font-medium">{getTotalOrderedQuantity()} tons</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-industrial-600">
+                <span className="text-industrial-300">Actual Load:</span>
+                <span className="text-white font-medium">{(netWeight / 1000).toFixed(1)} tons</span>
+              </div>
+            </div>
+            
+            {/* Product Details */}
+            <div className="mt-6">
+              <h4 className="text-lg font-medium text-white mb-4">Products Loaded:</h4>
+              <div className="space-y-3">
                 {products.map((product) => (
-                  <div key={product.id} className="flex justify-between items-center py-4 px-6 bg-white rounded-lg shadow border border-gray-200">
+                  <div key={product.id} className="flex justify-between items-center py-2 px-4 bg-industrial-700 rounded">
                     <div>
-                      <span className="text-driver font-bold">{product.name}</span>
-                      <span className="text-driver-secondary text-base ml-4">({product.stockyardArea})</span>
+                      <span className="text-white font-medium">{product.name}</span>
+                      <span className="text-industrial-300 text-sm ml-2">({product.stockyardArea})</span>
                     </div>
-                    <div className="text-right">
-                      <span className="text-driver font-bold">{quantities[product.id]} tons</span>
-                    </div>
+                    <span className="text-industrial-300">{quantities[product.id]} tons</span>
                   </div>
                 ))}
               </div>
             </div>
           </Card>
 
+          {/* Status */}
+          <Card className="p-6 bg-success/10 border-success">
+            <div className="flex items-center space-x-4">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-success rounded-full flex items-center justify-center">
+                  <Check size={24} className="text-white" />
+                </div>
+              </div>
+              <div className="text-success text-lg">
+                Loading completed successfully. Ready for delivery.
+              </div>
+            </div>
+          </Card>
+
           {/* Confirm Button */}
-          <div className="flex justify-center pt-12">
+          <div className="flex justify-center pt-8">
             <Button
               onClick={handleConfirm}
-              disabled={isProcessing}
-              className="text-3xl px-20 py-12 bg-custom-green hover:bg-green-600 text-text-dark font-bold shadow-2xl"
+              className="btn-large bg-success hover:bg-success/90 text-white text-2xl px-16 py-8"
               size="lg"
             >
-              {isProcessing ? (
-                <>
-                  <div className="loading-spinner"></div>
-                  Generating Delivery Note...
-                </>
-              ) : (
-                <>
-                  <FileText size={40} />
-                  ✔ Confirm Load & Generate Delivery Note
-                </>
-              )}
+              Confirm Load & Generate Delivery Note
             </Button>
           </div>
         </div>

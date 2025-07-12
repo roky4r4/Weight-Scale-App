@@ -36,152 +36,51 @@
   * {
     @apply border-border;
   }
-  
-  /* Optimized for 23" H x 13" W display */
-  html {
-    font-size: 20px; /* Larger base font for industrial display */
-  }
-  
   body {
-    @apply bg-custom-blue text-custom-gray;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    line-height: 1.4;
+    @apply bg-background text-foreground;
   }
 }
 
-/* Custom color palette for driver interface */
+/* Custom industrial theme colors */
 :root {
-  /* Main color palette */
-  --custom-blue: #B9E5FA;
-  --custom-green: #8BC650;
-  --custom-yellow: #F2C736;
-  --custom-gray: #A7A9AB;
-  --text-dark: #1E1E1E;
-  --text-light: #FFFFFF;
-  
-  /* Status colors */
-  --warning-yellow: #F2C736;
-  --active-yellow: #C9F805;
-  --success-green: #8BC650;
-  --danger-red: #ef4444;
+  --industrial-900: #0f172a;
+  --industrial-800: #1e293b;
+  --industrial-700: #334155;
+  --industrial-600: #475569;
+  --industrial-500: #64748b;
+  --industrial-400: #94a3b8;
+  --industrial-300: #cbd5e1;
+  --industrial-200: #e2e8f0;
+  --industrial-100: #f1f5f9;
+  --primary: #3b82f6;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
 }
 
-/* Enhanced component styles for driver interface */
-.btn-primary {
-  @apply h-20 px-12 text-xl font-semibold bg-custom-green text-text-dark;
-  @apply rounded-md shadow-lg hover:shadow-xl transform hover:scale-[1.02];
-  @apply transition-all duration-200 ease-out;
-  border-radius: 6px;
-}
-
-.btn-secondary {
-  @apply h-20 px-12 text-xl font-semibold bg-custom-gray text-text-light;
-  @apply rounded-md shadow-lg hover:shadow-xl transform hover:scale-[1.02];
-  @apply transition-all duration-200 ease-out;
-  border-radius: 6px;
-}
-
-.btn-warning {
-  @apply h-20 px-12 text-xl font-semibold bg-custom-yellow text-text-dark;
-  @apply rounded-md shadow-lg hover:shadow-xl transform hover:scale-[1.02];
-  @apply transition-all duration-200 ease-out;
-  border-radius: 6px;
-}
-
-.btn-cancel {
-  @apply h-20 px-12 text-xl font-semibold bg-red-500 text-text-light;
-  @apply rounded-md shadow-lg hover:shadow-xl transform hover:scale-[1.02];
-  @apply transition-all duration-200 ease-out;
-  border-radius: 6px;
+/* Custom component styles */
+.btn-large {
+  @apply h-16 px-8 text-lg font-semibold;
 }
 
 .input-large {
-  @apply h-20 px-8 text-xl bg-white border-2 border-custom-gray rounded-md;
-  @apply shadow-inner focus:shadow-lg focus:border-custom-green;
-  @apply transition-all duration-200;
-  border-radius: 6px;
-  color: #1E1E1E;
-}
-
-.card-driver {
-  @apply p-8 bg-white border-2 border-custom-gray rounded-lg shadow-lg;
-  @apply hover:shadow-xl transition-all duration-200;
-  border-radius: 6px;
+  @apply h-16 px-6 text-lg;
 }
 
 .card-selectable {
-  @apply card-driver cursor-pointer;
-  @apply hover:border-custom-green hover:shadow-xl hover:scale-[1.01];
+  @apply p-6 bg-industrial-800 border-industrial-600 cursor-pointer transition-all duration-200 hover:border-industrial-500 hover:bg-industrial-700;
 }
 
-.card-active {
-  @apply border-custom-green bg-custom-blue/20 shadow-xl;
-}
-
-/* Status indicators */
 .status-available {
-  @apply bg-custom-green text-text-dark px-4 py-2 rounded-md font-semibold;
+  @apply bg-success text-white;
 }
 
 .status-low {
-  @apply bg-custom-yellow text-text-dark px-4 py-2 rounded-md font-semibold;
+  @apply bg-warning text-white;
 }
 
 .status-unavailable {
-  @apply bg-red-500 text-text-light px-4 py-2 rounded-md font-semibold;
-}
-
-.status-weighing {
-  @apply bg-custom-yellow text-text-dark px-6 py-3 rounded-md font-bold;
-  animation: pulse-weighing 2s infinite;
-}
-
-/* Weighing animation */
-@keyframes pulse-weighing {
-  0%, 100% { 
-    opacity: 1; 
-    transform: scale(1);
-  }
-  50% { 
-    opacity: 0.8; 
-    transform: scale(1.02);
-  }
-}
-
-/* Typography improvements */
-.heading-xl {
-  @apply text-5xl font-bold text-text-dark leading-tight;
-}
-
-.heading-lg {
-  @apply text-4xl font-bold text-text-dark leading-tight;
-}
-
-.heading-md {
-  @apply text-3xl font-semibold text-text-dark;
-}
-
-.text-driver {
-  @apply text-xl text-text-dark leading-relaxed;
-}
-
-.text-driver-secondary {
-  @apply text-lg text-custom-gray leading-relaxed;
-}
-
-/* Weight display */
-.weight-display {
-  @apply text-8xl font-black text-custom-green;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-}
-
-.weight-label {
-  @apply text-2xl font-semibold text-custom-gray uppercase tracking-wide;
-}
-
-/* Loading states */
-.loading-spinner {
-  @apply animate-spin rounded-full h-12 w-12 border-4 border-custom-gray border-t-custom-green;
+  @apply bg-danger text-white;
 }
 
 /* Print styles */
@@ -217,23 +116,12 @@
   }
 }
 
-/* Accessibility improvements */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+/* Animations for status changes */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Focus states for accessibility */
-.btn-primary:focus,
-.btn-secondary:focus,
-.btn-warning:focus,
-.btn-cancel:focus {
-  @apply ring-4 ring-custom-green ring-opacity-50 outline-none;
-}
-
-.input-large:focus {
-  @apply ring-4 ring-custom-green ring-opacity-50 outline-none;
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
 }

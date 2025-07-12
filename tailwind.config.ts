@@ -13,9 +13,9 @@ export default {
 	theme: {
 		container: {
 			center: true,
-			padding: '3rem', // Increased for larger display
+			padding: '2rem',
 			screens: {
-				'2xl': '1600px' // Wider for 13" width
+				'2xl': '1400px'
 			}
 		},
 		extend: {
@@ -26,71 +26,72 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: '#8BC650', // Custom green for primary actions
-					foreground: '#1E1E1E'
+					DEFAULT: '#2563eb',
+					foreground: '#ffffff'
 				},
 				secondary: {
-					DEFAULT: '#A7A9AB', // Custom gray
-					foreground: '#FFFFFF'
+					DEFAULT: 'hsl(var(--secondary))',
+					foreground: 'hsl(var(--secondary-foreground))'
 				},
 				destructive: {
-					DEFAULT: '#ef4444',
-					foreground: '#FFFFFF'
+					DEFAULT: 'hsl(var(--destructive))',
+					foreground: 'hsl(var(--destructive-foreground))'
 				},
 				muted: {
-					DEFAULT: '#F5F5F5',
-					foreground: '#A7A9AB'
+					DEFAULT: 'hsl(var(--muted))',
+					foreground: 'hsl(var(--muted-foreground))'
 				},
 				accent: {
-					DEFAULT: '#F2C736', // Custom yellow
-					foreground: '#1E1E1E'
+					DEFAULT: 'hsl(var(--accent))',
+					foreground: 'hsl(var(--accent-foreground))'
 				},
 				popover: {
-					DEFAULT: '#FFFFFF',
-					foreground: '#1E1E1E'
+					DEFAULT: 'hsl(var(--popover))',
+					foreground: 'hsl(var(--popover-foreground))'
 				},
 				card: {
-					DEFAULT: '#FFFFFF',
-					foreground: '#1E1E1E'
+					DEFAULT: 'hsl(var(--card))',
+					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Custom driver interface colors
-				'custom-blue': '#B9E5FA',
-				'custom-green': '#8BC650',
-				'custom-yellow': '#F2C736',
-				'custom-gray': '#A7A9AB',
-				'text-dark': '#1E1E1E',
-				'text-light': '#FFFFFF',
-				'warning-yellow': '#F2C736',
-				'active-yellow': '#C9F805',
+				sidebar: {
+					DEFAULT: 'hsl(var(--sidebar-background))',
+					foreground: 'hsl(var(--sidebar-foreground))',
+					primary: 'hsl(var(--sidebar-primary))',
+					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+					accent: 'hsl(var(--sidebar-accent))',
+					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+					border: 'hsl(var(--sidebar-border))',
+					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// ScaleApp industrial theme colors
+				industrial: {
+					900: '#0a0a0b',
+					800: '#1a1a1d',
+					700: '#2a2a30',
+					600: '#3a3a42',
+					500: '#4a4a55',
+					400: '#6b7280',
+					300: '#9ca3af',
+					200: '#d1d5db',
+					100: '#f3f4f6'
+				},
+				success: {
+					DEFAULT: '#10b981',
+					dark: '#059669'
+				},
+				warning: {
+					DEFAULT: '#f59e0b',
+					dark: '#d97706'
+				},
+				danger: {
+					DEFAULT: '#ef4444',
+					dark: '#dc2626'
+				}
 			},
 			borderRadius: {
-				lg: '8px', // Slightly larger for industrial display
-				md: '6px',
-				sm: '4px'
-			},
-			fontSize: {
-				// Optimized for 23" x 13" display
-				'xs': ['16px', '20px'],
-				'sm': ['18px', '22px'],
-				'base': ['20px', '28px'],
-				'lg': ['22px', '30px'],
-				'xl': ['24px', '32px'],
-				'2xl': ['28px', '36px'],
-				'3xl': ['32px', '40px'],
-				'4xl': ['40px', '48px'],
-				'5xl': ['48px', '56px'],
-				'6xl': ['56px', '64px'],
-				'7xl': ['64px', '72px'],
-				'8xl': ['80px', '88px'],
-				'9xl': ['96px', '104px'],
-			},
-			spacing: {
-				// Enhanced spacing for touch targets
-				'18': '4.5rem',
-				'20': '5rem',
-				'24': '6rem',
-				'28': '7rem',
-				'32': '8rem',
+				lg: 'var(--radius)',
+				md: 'calc(var(--radius) - 2px)',
+				sm: 'calc(var(--radius) - 4px)'
 			},
 			keyframes: {
 				'accordion-down': {
@@ -128,24 +129,13 @@ export default {
 						transform: 'scale(1)',
 						opacity: '1'
 					}
-				},
-				'pulse-weighing': {
-					'0%, 100%': {
-						opacity: '1',
-						transform: 'scale(1)'
-					},
-					'50%': {
-						opacity: '0.8',
-						transform: 'scale(1.02)'
-					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.3s ease-out',
-				'scale-in': 'scale-in 0.2s ease-out',
-				'pulse-weighing': 'pulse-weighing 2s infinite'
+				'scale-in': 'scale-in 0.2s ease-out'
 			}
 		}
 	},

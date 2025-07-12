@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useLanguage } from '../hooks/useLanguage';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
-import { Plus, MapPin, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Plus, MapPin } from 'lucide-react';
 import Header from './Header';
 import { Address } from '../types';
 
@@ -58,114 +58,90 @@ const DriverScreen2 = ({ onNext, onPrevious }: DriverScreen2Props) => {
   };
 
   return (
-    <div className="min-h-screen bg-custom-blue">
-      <Header title="Delivery Address" />
+    <div className="min-h-screen bg-industrial-900">
+      <Header title={t('screen2.title')} />
       
-      <div className="container mx-auto px-8 py-12">
-        <div className="max-w-6xl mx-auto space-y-12">
-          
-          {/* Instructions */}
-          <Card className="p-8 text-center">
-            <h2 className="heading-lg mb-4">Where are you delivering?</h2>
-            <p className="text-driver-secondary">Select your delivery destination or skip if not applicable</p>
-          </Card>
+      <div className="container mx-auto px-6 py-8">
+        <div className="max-w-4xl mx-auto space-y-8">
           
           {/* No Delivery Address Option */}
           <Card
             className={`card-selectable ${
               noAddressSelected 
-                ? 'card-active' 
+                ? 'border-primary bg-primary/10' 
                 : ''
             }`}
             onClick={handleNoAddressSelect}
           >
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-4">
               <div className="flex-shrink-0">
-                <div className="w-16 h-16 bg-custom-gray rounded-full flex items-center justify-center">
-                  <MapPin size={32} className="text-text-light" />
+                <div className="w-12 h-12 bg-industrial-600 rounded-full flex items-center justify-center">
+                  <MapPin size={24} className="text-industrial-300" />
                 </div>
               </div>
-              <div className="space-y-2">
-                <div className="text-2xl font-bold text-text-dark">
-                  🏠 No Delivery Required
+              <div className="space-y-1">
+                <div className="text-lg font-semibold text-white">
+                  No Delivery Address Required
                 </div>
-                <div className="text-driver-secondary">
-                  Materials will be used on-site or picked up by customer
+                <div className="text-industrial-300">
+                  Select this option if no delivery address is needed
                 </div>
               </div>
-              {noAddressSelected && (
-                <div className="ml-auto">
-                  <div className="w-8 h-8 bg-custom-green rounded-full flex items-center justify-center">
-                    <span className="text-text-dark font-bold">✓</span>
-                  </div>
-                </div>
-              )}
             </div>
           </Card>
 
-          <div className="grid gap-8 md:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-2">
             {predefinedAddresses.map((address) => (
               <Card
                 key={address.id}
                 className={`card-selectable ${
                   selectedAddress?.id === address.id 
-                    ? 'card-active' 
+                    ? 'border-primary bg-primary/10' 
                     : ''
                 }`}
                 onClick={() => handleAddressSelect(address)}
               >
-                <div className="relative">
-                  <div className="space-y-3">
-                    <div className="text-2xl font-bold text-text-dark">
-                      📍 {address.street}
-                    </div>
-                    <div className="text-driver">
-                      {address.postalCode} {address.city}
-                    </div>
-                    <div className="text-driver-secondary">
-                      {address.country}
-                    </div>
+                <div className="space-y-2">
+                  <div className="text-lg font-semibold text-white">
+                    {address.street}
                   </div>
-                  {selectedAddress?.id === address.id && (
-                    <div className="absolute top-0 right-0">
-                      <div className="w-8 h-8 bg-custom-green rounded-full flex items-center justify-center">
-                        <span className="text-text-dark font-bold">✓</span>
-                      </div>
-                    </div>
-                  )}
+                  <div className="text-industrial-300">
+                    {address.postalCode} {address.city}
+                  </div>
+                  <div className="text-industrial-400">
+                    {address.country}
+                  </div>
                 </div>
               </Card>
             ))}
           </div>
 
           {/* Add New Address Button */}
-          <Card className="card-selectable border-dashed border-custom-gray">
-            <div className="flex items-center justify-center space-x-6 text-custom-gray py-8">
-              <Plus size={48} />
-              <span className="text-2xl font-semibold">➕ Add New Address</span>
+          <Card className="card-selectable border-dashed border-industrial-500">
+            <div className="flex items-center justify-center space-x-4 text-industrial-300">
+              <Plus size={32} />
+              <span className="text-xl">{t('screen2.add.new')}</span>
             </div>
           </Card>
 
           {/* Navigation Buttons */}
-          <div className="flex justify-between pt-12">
+          <div className="flex justify-between pt-8">
             <Button
               onClick={onPrevious}
               variant="outline"
-              className="text-2xl px-12 py-6"
+              className="btn-large"
               size="lg"
             >
-              <ArrowLeft size={32} />
-              Go Back
+              {t('common.previous')}
             </Button>
             
             <Button
               onClick={handleNext}
               disabled={!selectedAddress && !noAddressSelected}
-              className="text-2xl px-12 py-6 bg-custom-green hover:bg-green-600"
+              className="btn-large bg-primary hover:bg-blue-600 text-white"
               size="lg"
             >
-              Next Step
-              <ArrowRight size={32} />
+              {t('common.next')}
             </Button>
           </div>
         </div>

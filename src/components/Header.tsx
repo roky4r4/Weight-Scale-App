@@ -14,14 +14,14 @@ const Header = ({ title }: HeaderProps) => {
   };
 
   return (
-    <header className="bg-custom-gray px-8 py-6 shadow-lg">
-      <div className="flex items-center justify-between max-w-7xl mx-auto">
-        <div className="flex items-center space-x-6">
-          <div className="text-3xl font-bold text-text-light">
+    <header className="bg-industrial-800 border-b border-industrial-600 px-6 py-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <div className="text-2xl font-bold text-primary">
             {t('app.title')}
           </div>
           {title && (
-            <div className="text-2xl text-text-light font-medium">
+            <div className="text-lg text-industrial-200">
               {title}
             </div>
           )}
@@ -29,8 +29,9 @@ const Header = ({ title }: HeaderProps) => {
         
         <Button
           variant="outline"
+          size="lg"
           onClick={toggleLanguage}
-          className="h-16 px-8 text-lg font-semibold bg-white text-text-dark border-2 border-white hover:bg-custom-blue hover:text-text-dark transition-all duration-200"
+          className="btn-large min-h-[60px] text-lg"
         >
           {language === 'en' ? '🇩🇪 Deutsch' : '🇬🇧 English'}
         </Button>
