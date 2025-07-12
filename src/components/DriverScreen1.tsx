@@ -46,85 +46,87 @@ const DriverScreen1 = ({ onNext }: DriverScreen1Props) => {
   };
 
   return (
-    <div className="min-h-screen bg-industrial-900">
-      <Header title={t('screen1.title')} />
+    <div className="min-h-screen bg-blue-100">
+      <Header title="Weight & Information" />
       
-      <div className="container mx-auto px-6 py-8">
-        <div className="max-w-4xl mx-auto space-y-8">
+      <div className="driver-container">
+        <div className="space-y-12">
           
-          {/* Weight Display */}
-          <Card className="p-8 bg-industrial-800 border-industrial-600">
+          {/* Weight Display - Prominent */}
+          <div className="bg-white p-12 rounded-xl border-4 border-yellow-400 shadow-xl">
             <div className="text-center">
-              <div className="text-industrial-300 text-xl mb-2">
-                {t('screen1.detected.weight')}
+              <div className="text-gray-600 text-3xl mb-6 font-semibold">
+                TRUCK WEIGHT DETECTED
               </div>
-              <div className="text-6xl font-bold text-primary mb-4">
-                {detectedWeight} kg
+              <div className="text-9xl font-black text-gray-800 mb-6">
+                {detectedWeight}
+              </div>
+              <div className="text-gray-600 text-4xl font-bold">
+                KG
               </div>
             </div>
-          </Card>
+          </div>
 
-          {/* Number Plate */}
-          <Card className="p-8 bg-industrial-800 border-industrial-600">
-            <div className="text-center">
-              <div className="text-industrial-300 text-xl mb-4">
-                {t('screen1.number.plate')}
+          {/* Number Plate - Single Column */}
+          <div className="bg-white p-8 rounded-xl border-2 border-gray-300 shadow-lg">
+            <div className="text-center space-y-6">
+              <div className="text-gray-700 text-2xl font-bold">
+                LICENSE PLATE NUMBER
               </div>
-              <div className="text-4xl font-bold text-white mb-6 p-4 bg-yellow-500 text-black rounded-lg inline-block font-mono">
+              <div className="text-6xl font-bold text-black mb-8 p-6 bg-yellow-400 text-black rounded-lg inline-block font-mono border-4 border-black">
                 {detectedPlate}
               </div>
               
               {detectedCustomerName && (
-                <div className="mb-6">
-                  <div className="text-2xl text-success font-semibold">
-                    Registered: {detectedCustomerName}
+                <div className="mb-8 bg-green-50 p-6 rounded-lg border-2 border-green-300">
+                  <div className="text-3xl text-green-600 font-bold">
+                    ✓ REGISTERED: {detectedCustomerName}
                   </div>
                 </div>
               )}
               
-              <div className="mt-6">
-                <label className="block text-industrial-300 text-lg mb-4">
-                  {t('screen1.not.you')}
+              <div className="mt-8">
+                <label className="block text-gray-700 text-xl mb-4 font-semibold">
+                  DIFFERENT PLATE? ENTER YOURS:
                 </label>
                 <Input
                   value={detectedPlate}
                   onChange={(e) => {
                     setDetectedPlate(e.target.value);
                   }}
-                  className="input-large text-center text-2xl font-mono bg-industrial-700 border-industrial-500"
-                  placeholder="XX-123-XX"
+                  className="h-20 px-6 text-4xl font-mono text-center bg-yellow-50 border-4 border-yellow-400 text-gray-800 rounded-lg max-w-md mx-auto"
+                  placeholder="AB-123-CD"
                 />
               </div>
             </div>
-          </Card>
+          </div>
 
-          {/* Customer Name Input */}
-          <Card className="p-8 bg-industrial-800 border-industrial-600">
-            <div className="text-center">
-              <div className="text-industrial-300 text-xl mb-4">
-                Customer/Company Name
+          {/* Customer Name - Single Column */}
+          <div className="bg-white p-8 rounded-xl border-2 border-gray-300 shadow-lg">
+            <div className="text-center space-y-6">
+              <div className="text-gray-700 text-2xl font-bold">
+                CUSTOMER/COMPANY NAME
               </div>
               <Input
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
-                className="input-large text-center text-2xl bg-industrial-700 border-industrial-500"
+                className="h-20 px-6 text-2xl text-center bg-white border-4 border-gray-400 text-gray-800 rounded-lg max-w-lg mx-auto"
                 placeholder="Enter customer name"
               />
-              <div className="text-sm text-industrial-400 mt-2">
+              <div className="text-lg text-gray-600">
                 Enter your company name or customer name
               </div>
             </div>
-          </Card>
+          </div>
 
           {/* Confirm Button */}
           <div className="flex justify-center pt-8">
             <Button
               onClick={handleConfirm}
               disabled={!customerName.trim()}
-              className="btn-large bg-primary hover:bg-blue-600 text-white text-2xl px-16 py-8"
-              size="lg"
+              className="h-24 px-16 bg-green-500 hover:bg-green-600 text-white text-3xl font-bold rounded-xl shadow-lg disabled:bg-gray-300"
             >
-              {t('screen1.confirm.info')}
+              CONFIRM WEIGHT & INFO
             </Button>
           </div>
         </div>

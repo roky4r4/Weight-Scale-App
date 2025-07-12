@@ -99,38 +99,46 @@ const DriverScreen3 = ({ onNext, onPrevious, isRegistered }: DriverScreen3Props)
   };
 
   return (
-    <div className="min-h-screen bg-industrial-900">
-      <Header title={t('screen3.title')} />
+    <div className="min-h-screen bg-blue-100">
+      <Header title="Product Selection" />
       
-      <div className="container mx-auto px-6 py-8">
-        <div className="max-w-4xl mx-auto space-y-8">
+      <div className="driver-container">
+        <div className="space-y-8">
+          
+          {/* Title */}
+          <div className="text-center">
+            <h2 className="text-4xl font-bold text-gray-700 mb-4">
+              SELECT PRODUCTS TO LOAD
+            </h2>
+          </div>
           
           {/* Selection Summary */}
           {selectedProducts.length > 0 && (
-            <Card className="p-4 bg-primary/10 border-primary">
-              <div className="text-white">
-                <div className="font-semibold mb-2">
-                  Selected: {selectedProducts.length} product{selectedProducts.length > 1 ? 's' : ''}
+            <div className="bg-green-50 p-6 rounded-xl border-2 border-green-300">
+              <div className="text-gray-700">
+                <div className="text-2xl font-bold mb-3">
+                  SELECTED: {selectedProducts.length} PRODUCT{selectedProducts.length > 1 ? 'S' : ''}
                 </div>
-                <div className="text-sm text-industrial-300">
+                <div className="text-xl text-gray-600 mb-3">
                   {selectedProducts.map(p => p.name).join(', ')}
                 </div>
                 {!isRegistered && getTotalPrice() && (
-                  <div className="text-primary font-bold text-lg mt-2">
-                    Total: €{getTotalPrice()}/ton
+                  <div className="text-green-600 font-bold text-2xl">
+                    TOTAL: €{getTotalPrice()}/TON
                   </div>
                 )}
               </div>
-            </Card>
+            </div>
           )}
 
-          <div className="grid gap-6 md:grid-cols-2">
+          {/* Single Column Products List */}
+          <div className="space-y-6 max-w-4xl mx-auto">
             {products.map((product) => (
-              <Card
+              <div
                 key={product.id}
-                className={`card-selectable ${
+                className={`card-driver ${
                   isProductSelected(product.id)
-                    ? 'border-primary bg-primary/10' 
+                    ? 'card-driver-selected' 
                     : ''
                 } ${
                   product.availability === 'unavailable' 
@@ -141,22 +149,22 @@ const DriverScreen3 = ({ onNext, onPrevious, isRegistered }: DriverScreen3Props)
               >
                 <div className="space-y-4">
                   <div className="flex justify-between items-start">
-                    <div className="flex items-start space-x-3 flex-1">
+                    <div className="flex items-start space-x-6 flex-1">
                       <Checkbox
                         checked={isProductSelected(product.id)}
                         disabled={product.availability === 'unavailable'}
-                        className="mt-1"
+                        className="mt-2 w-6 h-6"
                       />
                       <div className="flex-1">
-                        <div className="text-xl font-semibold text-white mb-2">
+                        <div className="text-3xl font-bold text-gray-700 mb-3">
                           {product.name}
                         </div>
-                        <div className="text-industrial-300 mb-2">
+                        <div className="text-xl text-gray-600 mb-3">
                           {product.description}
                         </div>
                         {!isRegistered && product.price && (
-                          <div className="text-primary font-bold text-lg">
-                            €{product.price}/ton
+                          <div className="text-green-600 font-bold text-2xl">
+                            €{product.price}/TON
                           </div>
                         )}
                       </div>
@@ -164,32 +172,29 @@ const DriverScreen3 = ({ onNext, onPrevious, isRegistered }: DriverScreen3Props)
                     {getAvailabilityBadge(product.availability)}
                   </div>
                   
-                  <div className="text-industrial-400">
-                    <span className="font-medium">{t('screen3.stockyard')}:</span> {product.stockyardArea}
+                  <div className="text-gray-600 text-xl bg-gray-50 p-4 rounded-lg">
+                    <span className="font-bold">LOCATION:</span> {product.stockyardArea}
                   </div>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
 
           {/* Navigation Buttons */}
-          <div className="flex justify-between pt-8">
+          <div className="flex justify-between pt-8 max-w-4xl mx-auto">
             <Button
               onClick={onPrevious}
-              variant="outline"
-              className="btn-large"
-              size="lg"
+              className="h-20 px-8 text-xl font-semibold bg-gray-500 hover:bg-gray-600 text-white rounded-lg shadow-lg"
             >
-              {t('common.previous')}
+              ← GO BACK
             </Button>
             
             <Button
               onClick={handleNext}
               disabled={selectedProducts.length === 0}
-              className="btn-large bg-primary hover:bg-blue-600 text-white"
-              size="lg"
+              className="h-20 px-8 text-xl font-semibold bg-green-500 hover:bg-green-600 text-white rounded-lg shadow-lg disabled:bg-gray-300"
             >
-              {t('common.next')}
+              NEXT STEP →
             </Button>
           </div>
         </div>

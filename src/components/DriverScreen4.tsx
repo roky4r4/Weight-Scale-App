@@ -56,114 +56,115 @@ const DriverScreen4 = ({ products, onNext, onPrevious }: DriverScreen4Props) => 
   };
 
   return (
-    <div className="min-h-screen bg-industrial-900">
-      <Header title={t('screen4.title')} />
+    <div className="min-h-screen bg-blue-100">
+      <Header title="Quantity Selection" />
       
-      <div className="container mx-auto px-6 py-8">
-        <div className="max-w-4xl mx-auto space-y-8">
+      <div className="driver-container">
+        <div className="space-y-8">
           
-          {/* Selected Products */}
-          <Card className="p-8 bg-industrial-800 border-industrial-600">
-            <div className="text-center mb-6">
-              <div className="text-industrial-300 text-lg mb-2">
-                {t('screen4.selected.product')}s
-              </div>
-              <div className="text-lg text-industrial-400">
-                {products.length} product{products.length !== 1 ? 's' : ''} selected
-              </div>
+          {/* Title */}
+          <div className="text-center">
+            <h2 className="text-4xl font-bold text-gray-700 mb-4">
+              ENTER QUANTITIES
+            </h2>
+            <div className="text-2xl text-gray-600">
+              {products.length} PRODUCT{products.length !== 1 ? 'S' : ''} SELECTED
             </div>
-          </Card>
+          </div>
 
-          {/* Quantity Selection for Each Product */}
-          <div className="space-y-6">
+          {/* Single Column Quantity Selection */}
+          <div className="space-y-8 max-w-4xl mx-auto">
             {products.map((product) => (
-              <Card key={product.id} className="p-6 bg-industrial-800 border-industrial-600">
-                <div className="mb-4">
-                  <h3 className="text-xl font-bold text-white mb-2">{product.name}</h3>
-                  <p className="text-industrial-400">{product.description}</p>
-                  <p className="text-industrial-300 text-sm mt-1">Location: {product.stockyardArea}</p>
+              <div key={product.id} className="bg-white p-8 rounded-xl border-2 border-gray-300 shadow-lg">
+                <div className="mb-8">
+                  <h3 className="text-3xl font-bold text-gray-700 mb-4">{product.name}</h3>
+                  <p className="text-xl text-gray-600 mb-2">{product.description}</p>
+                  <p className="text-lg text-gray-500 bg-gray-50 p-3 rounded-lg">
+                    <span className="font-bold">LOCATION:</span> {product.stockyardArea}
+                  </p>
                 </div>
 
-                {/* Preset Quantities */}
-                <div className="mb-4">
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {/* Preset Quantities - Large Buttons */}
+                <div className="mb-8">
+                  <div className="text-xl font-bold text-gray-700 mb-4">QUICK SELECT:</div>
+                  <div className="grid grid-cols-2 gap-4">
                     {presetQuantities.map((preset) => (
                       <Button
                         key={preset}
                         onClick={() => handlePresetSelect(product.id, preset)}
-                        variant={quantities[product.id] === preset ? 'default' : 'outline'}
-                        className="text-sm"
-                        size="sm"
+                        className={`h-16 text-xl font-bold rounded-lg ${
+                          quantities[product.id] === preset 
+                            ? 'bg-green-500 hover:bg-green-600 text-white' 
+                            : 'bg-gray-200 hover:bg-gray-300 text-gray-700 border-2 border-gray-400'
+                        }`}
                       >
-                        {preset} {t('screen4.quantity.tons')}
+                        {preset} TONS
                       </Button>
                     ))}
                   </div>
                 </div>
 
-                {/* Manual Quantity Input */}
-                <div className="flex items-center justify-center space-x-2">
-                  <Button
-                    onClick={() => handleDecrement(product.id)}
-                    variant="outline"
-                    size="sm"
-                  >
-                    <Minus size={16} />
-                  </Button>
-                  
-                  <Input
-                    type="number"
-                    value={quantities[product.id] || ''}
-                    onChange={(e) => handleManualChange(product.id, e.target.value)}
-                    className="w-24 text-center"
-                    placeholder="0"
-                    min="0"
-                    step="0.1"
-                  />
-                  
-                  <Button
-                    onClick={() => handleIncrement(product.id)}
-                    variant="outline"
-                    size="sm"
-                  >
-                    <Plus size={16} />
-                  </Button>
-                  
-                  <span className="text-industrial-300 ml-2">
-                    {t('screen4.quantity.tons')}
-                  </span>
+                {/* Manual Quantity Input - Large */}
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <div className="text-xl font-bold text-gray-700 mb-4 text-center">CUSTOM AMOUNT:</div>
+                  <div className="flex items-center justify-center space-x-4">
+                    <Button
+                      onClick={() => handleDecrement(product.id)}
+                      className="w-16 h-16 text-2xl font-bold bg-gray-500 hover:bg-gray-600 text-white rounded-lg"
+                    >
+                      <Minus size={24} />
+                    </Button>
+                    
+                    <Input
+                      type="number"
+                      value={quantities[product.id] || ''}
+                      onChange={(e) => handleManualChange(product.id, e.target.value)}
+                      className="w-32 h-16 text-3xl text-center font-bold border-4 border-gray-400 rounded-lg"
+                      placeholder="0"
+                      min="0"
+                      step="0.1"
+                    />
+                    
+                    <Button
+                      onClick={() => handleIncrement(product.id)}
+                      className="w-16 h-16 text-2xl font-bold bg-gray-500 hover:bg-gray-600 text-white rounded-lg"
+                    >
+                      <Plus size={24} />
+                    </Button>
+                    
+                    <span className="text-2xl font-bold text-gray-700">
+                      TONS
+                    </span>
+                  </div>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
 
           {/* Total Summary */}
           {getTotalQuantity() > 0 && (
-            <Card className="p-6 bg-success/10 border-success">
-              <div className="text-center text-success text-lg">
-                Total: {getTotalQuantity()} {t('screen4.quantity.tons')}
+            <div className="bg-green-50 p-8 rounded-xl border-4 border-green-400 max-w-4xl mx-auto">
+              <div className="text-center text-green-600 text-3xl font-bold">
+                TOTAL: {getTotalQuantity()} TONS
               </div>
-            </Card>
+            </div>
           )}
 
           {/* Navigation Buttons */}
-          <div className="flex justify-between pt-8">
+          <div className="flex justify-between pt-8 max-w-4xl mx-auto">
             <Button
               onClick={onPrevious}
-              variant="outline"
-              className="btn-large"
-              size="lg"
+              className="h-20 px-8 text-xl font-semibold bg-gray-500 hover:bg-gray-600 text-white rounded-lg shadow-lg"
             >
-              {t('common.previous')}
+              ← GO BACK
             </Button>
             
             <Button
               onClick={handleNext}
               disabled={getTotalQuantity() <= 0}
-              className="btn-large bg-primary hover:bg-blue-600 text-white"
-              size="lg"
+              className="h-20 px-8 text-xl font-semibold bg-green-500 hover:bg-green-600 text-white rounded-lg shadow-lg disabled:bg-gray-300"
             >
-              {t('screen4.add.to.load')}
+              ADD TO LOAD →
             </Button>
           </div>
         </div>

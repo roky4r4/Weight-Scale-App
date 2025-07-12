@@ -58,90 +58,97 @@ const DriverScreen2 = ({ onNext, onPrevious }: DriverScreen2Props) => {
   };
 
   return (
-    <div className="min-h-screen bg-industrial-900">
-      <Header title={t('screen2.title')} />
+    <div className="min-h-screen bg-blue-100">
+      <Header title="Delivery Address" />
       
-      <div className="container mx-auto px-6 py-8">
-        <div className="max-w-4xl mx-auto space-y-8">
+      <div className="driver-container">
+        <div className="space-y-8">
           
-          {/* No Delivery Address Option */}
-          <Card
-            className={`card-selectable ${
-              noAddressSelected 
-                ? 'border-primary bg-primary/10' 
-                : ''
-            }`}
-            onClick={handleNoAddressSelect}
-          >
-            <div className="flex items-center space-x-4">
-              <div className="flex-shrink-0">
-                <div className="w-12 h-12 bg-industrial-600 rounded-full flex items-center justify-center">
-                  <MapPin size={24} className="text-industrial-300" />
+          {/* Title */}
+          <div className="text-center">
+            <h2 className="text-4xl font-bold text-gray-700 mb-4">
+              SELECT DELIVERY ADDRESS
+            </h2>
+          </div>
+          
+          {/* Single Column Layout for Addresses */}
+          <div className="space-y-6 max-w-3xl mx-auto">
+            
+            {/* No Delivery Address Option */}
+            <div
+              className={`card-driver ${
+                noAddressSelected 
+                  ? 'card-driver-selected' 
+                  : ''
+              }`}
+              onClick={handleNoAddressSelect}
+            >
+              <div className="flex items-center space-x-6">
+                <div className="flex-shrink-0">
+                  <div className="w-16 h-16 bg-gray-400 rounded-full flex items-center justify-center">
+                    <MapPin size={32} className="text-white" />
+                  </div>
                 </div>
-              </div>
-              <div className="space-y-1">
-                <div className="text-lg font-semibold text-white">
-                  No Delivery Address Required
-                </div>
-                <div className="text-industrial-300">
-                  Select this option if no delivery address is needed
+                <div className="space-y-2">
+                  <div className="text-2xl font-bold text-gray-700">
+                    NO DELIVERY ADDRESS NEEDED
+                  </div>
+                  <div className="text-xl text-gray-600">
+                    Select this for direct pickup operations
+                  </div>
                 </div>
               </div>
             </div>
-          </Card>
 
-          <div className="grid gap-6 md:grid-cols-2">
+            {/* Predefined Addresses */}
             {predefinedAddresses.map((address) => (
-              <Card
+              <div
                 key={address.id}
-                className={`card-selectable ${
+                className={`card-driver ${
                   selectedAddress?.id === address.id 
-                    ? 'border-primary bg-primary/10' 
+                    ? 'card-driver-selected' 
                     : ''
                 }`}
                 onClick={() => handleAddressSelect(address)}
               >
-                <div className="space-y-2">
-                  <div className="text-lg font-semibold text-white">
+                <div className="space-y-3">
+                  <div className="text-2xl font-bold text-gray-700">
                     {address.street}
                   </div>
-                  <div className="text-industrial-300">
+                  <div className="text-xl text-gray-600">
                     {address.postalCode} {address.city}
                   </div>
-                  <div className="text-industrial-400">
+                  <div className="text-lg text-gray-500">
                     {address.country}
                   </div>
                 </div>
-              </Card>
+              </div>
             ))}
+
+            {/* Add New Address Button */}
+            <div className="card-driver border-dashed border-gray-400">
+              <div className="flex items-center justify-center space-x-6 text-gray-600">
+                <Plus size={48} />
+                <span className="text-2xl font-semibold">ADD NEW ADDRESS</span>
+              </div>
+            </div>
           </div>
 
-          {/* Add New Address Button */}
-          <Card className="card-selectable border-dashed border-industrial-500">
-            <div className="flex items-center justify-center space-x-4 text-industrial-300">
-              <Plus size={32} />
-              <span className="text-xl">{t('screen2.add.new')}</span>
-            </div>
-          </Card>
-
           {/* Navigation Buttons */}
-          <div className="flex justify-between pt-8">
+          <div className="flex justify-between pt-8 max-w-3xl mx-auto">
             <Button
               onClick={onPrevious}
-              variant="outline"
-              className="btn-large"
-              size="lg"
+              className="h-20 px-8 text-xl font-semibold bg-gray-500 hover:bg-gray-600 text-white rounded-lg shadow-lg"
             >
-              {t('common.previous')}
+              ← GO BACK
             </Button>
             
             <Button
               onClick={handleNext}
               disabled={!selectedAddress && !noAddressSelected}
-              className="btn-large bg-primary hover:bg-blue-600 text-white"
-              size="lg"
+              className="h-20 px-8 text-xl font-semibold bg-green-500 hover:bg-green-600 text-white rounded-lg shadow-lg disabled:bg-gray-300"
             >
-              {t('common.next')}
+              NEXT STEP →
             </Button>
           </div>
         </div>

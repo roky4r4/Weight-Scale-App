@@ -13,48 +13,46 @@ const DriverWelcomeScreen = ({ onSelectAction }: DriverWelcomeScreenProps) => {
   const { t } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-industrial-900">
-      <Header title={t('welcome.title')} />
+    <div className="min-h-screen bg-blue-100">
+      <Header title="Driver Interface" />
       
-      <div className="container mx-auto px-6 py-8">
-        <div className="max-w-2xl mx-auto space-y-8">
+      <div className="driver-container">
+        <div className="space-y-12">
           
           {/* Welcome Message */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-white mb-4">
-              Welcome
+          <div className="text-center mb-16">
+            <h1 className="text-6xl font-bold text-gray-700 mb-6">
+              Welcome Driver
             </h1>
-            <p className="text-xl text-industrial-300">
-              {t('welcome.choose.action')}
+            <p className="text-3xl text-gray-600">
+              Choose your action to begin
             </p>
           </div>
 
-          {/* Action Buttons */}
-          <div className="space-y-6">
+          {/* Action Buttons - Single Column */}
+          <div className="space-y-8 max-w-2xl mx-auto">
             
             {/* Pickup/Load Button */}
-            <Card className="p-8 bg-industrial-800 border-industrial-600">
+            <div className="bg-white p-8 rounded-xl border-2 border-gray-300 shadow-lg">
               <Button
                 onClick={() => onSelectAction('pickup')}
-                className="w-full h-32 bg-primary hover:bg-blue-600 text-white text-3xl font-semibold flex items-center justify-center space-x-4"
-                size="lg"
+                className="w-full h-40 bg-green-500 hover:bg-green-600 text-white text-4xl font-bold flex items-center justify-center space-x-6 rounded-xl shadow-lg"
               >
-                <ArrowUp size={48} />
-                <span>{t('welcome.pickup.load')}</span>
+                <ArrowUp size={64} />
+                <span>LOAD TRUCK</span>
               </Button>
-            </Card>
+            </div>
 
             {/* Delivery/Unload Button */}
-            <Card className="p-8 bg-industrial-800 border-industrial-600">
+            <div className="bg-white p-8 rounded-xl border-2 border-gray-300 shadow-lg">
               <Button
                 onClick={() => onSelectAction('delivery')}
-                className="w-full h-32 bg-success hover:bg-green-600 text-white text-3xl font-semibold flex items-center justify-center space-x-4"
-                size="lg"
+                className="w-full h-40 bg-green-500 hover:bg-green-600 text-white text-4xl font-bold flex items-center justify-center space-x-6 rounded-xl shadow-lg"
               >
-                <ArrowDown size={48} />
-                <span>{t('welcome.delivery.unload')}</span>
+                <ArrowDown size={64} />
+                <span>UNLOAD TRUCK</span>
               </Button>
-            </Card>
+            </div>
             
           </div>
         </div>
